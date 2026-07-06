@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+    表名: patent_supplementary
+    表注释: 补漏专利表
+    生成时间: Mon Jul 06 19:14:26 CST 2026
+-->
+<mapper namespace="com.chen.intellectualproperty.mapper.PatentSupplementaryMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.entity.PatentSupplementary">
+        <id column="id" jdbcType="BIGINT" property="id" /> <!-- 主键ID -->
+        <result column="seq_no" jdbcType="INTEGER" property="seqNo" /> <!-- 序号 -->
+        <result column="application_no" jdbcType="VARCHAR" property="applicationNo" /> <!-- 申请号/专利号 -->
+        <result column="patent_name" jdbcType="VARCHAR" property="patentName" /> <!-- 发明创造名称 -->
+        <result column="applicant" jdbcType="VARCHAR" property="applicant" /> <!-- 申请人 -->
+        <result column="inventor" jdbcType="VARCHAR" property="inventor" /> <!-- 发明人 -->
+        <result column="sponsor" jdbcType="VARCHAR" property="sponsor" /> <!-- 主办人 -->
+        <result column="agent" jdbcType="VARCHAR" property="agent" /> <!-- 委托书代理人 -->
+        <result column="application_date" jdbcType="DATE" property="applicationDate" /> <!-- 申请日 -->
+        <result column="notification" jdbcType="VARCHAR" property="notification" /> <!-- 通知书（状态下子列） -->
+        <result column="issue_date" jdbcType="DATE" property="issueDate" /> <!-- 发文日（状态下子列） -->
+        <result column="fee_reduction" jdbcType="VARCHAR" property="feeReduction" /> <!-- 费减（状态下子列） -->
+        <result column="remark" jdbcType="VARCHAR" property="remark" /> <!-- 备注 -->
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" /> <!-- 创建时间 -->
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" /> <!-- 更新时间 -->
+    </resultMap>
+
+    <!-- 基础列列表 -->
+    <sql id="Base_Column_List">
+        id, seq_no, application_no, patent_name, applicant, inventor, sponsor, agent, application_date, notification, issue_date, fee_reduction, remark, create_time, update_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="insert" parameterType="com.chen.intellectualproperty.entity.PatentSupplementary">
+        INSERT INTO patent_supplementary (
+        <trim suffixOverrides=",">
+            id,
+            <if test="seqNo != null">seq_no,</if>
+            <if test="applicationNo != null">application_no,</if>
+            <if test="patentName != null">patent_name,</if>
+            <if test="applicant != null">applicant,</if>
+            <if test="inventor != null">inventor,</if>
+            <if test="sponsor != null">sponsor,</if>
+            <if test="agent != null">agent,</if>
+            <if test="applicationDate != null">application_date,</if>
+            <if test="notification != null">notification,</if>
+            <if test="issueDate != null">issue_date,</if>
+            <if test="feeReduction != null">fee_reduction,</if>
+            <if test="remark != null">remark,</if>
+            create_time,
+            update_time,
+        </trim>
+        ) VALUES (
+        <trim suffixOverrides=",">
+            #{id},
+            <if test="seqNo != null">#{seqNo},</if>
+            <if test="applicationNo != null">#{applicationNo},</if>
+            <if test="patentName != null">#{patentName},</if>
+            <if test="applicant != null">#{applicant},</if>
+            <if test="inventor != null">#{inventor},</if>
+            <if test="sponsor != null">#{sponsor},</if>
+            <if test="agent != null">#{agent},</if>
+            <if test="applicationDate != null">#{applicationDate},</if>
+            <if test="notification != null">#{notification},</if>
+            <if test="issueDate != null">#{issueDate},</if>
+            <if test="feeReduction != null">#{feeReduction},</if>
+            <if test="remark != null">#{remark},</if>
+            #{createTime},
+            #{updateTime},
+        </trim>
+        )
+    </insert>
+
+    <!-- 插入或更新记录 -->
+    <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.entity.PatentSupplementary">
+        INSERT INTO patent_supplementary (
+        <trim suffixOverrides=",">
+            id,
+            <if test="seqNo != null">seq_no,</if>
+            <if test="applicationNo != null">application_no,</if>
+            <if test="patentName != null">patent_name,</if>
+            <if test="applicant != null">applicant,</if>
+            <if test="inventor != null">inventor,</if>
+            <if test="sponsor != null">sponsor,</if>
+            <if test="agent != null">agent,</if>
+            <if test="applicationDate != null">application_date,</if>
+            <if test="notification != null">notification,</if>
+            <if test="issueDate != null">issue_date,</if>
+            <if test="feeReduction != null">fee_reduction,</if>
+            <if test="remark != null">remark,</if>
+            create_time,
+            update_time,
+        </trim>
+        ) VALUES (
+        <trim suffixOverrides=",">
+            #{id},
+            <if test="seqNo != null">#{seqNo},</if>
+            <if test="applicationNo != null">#{applicationNo},</if>
+            <if test="patentName != null">#{patentName},</if>
+            <if test="applicant != null">#{applicant},</if>
+            <if test="inventor != null">#{inventor},</if>
+            <if test="sponsor != null">#{sponsor},</if>
+            <if test="agent != null">#{agent},</if>
+            <if test="applicationDate != null">#{applicationDate},</if>
+            <if test="notification != null">#{notification},</if>
+            <if test="issueDate != null">#{issueDate},</if>
+            <if test="feeReduction != null">#{feeReduction},</if>
+            <if test="remark != null">#{remark},</if>
+            #{createTime},
+            #{updateTime},
+        </trim>
+        )
+        ON DUPLICATE KEY UPDATE
+        <trim suffixOverrides=",">
+            id = VALUES(id),
+            seq_no = VALUES(seq_no),
+            application_no = VALUES(application_no),
+            patent_name = VALUES(patent_name),
+            applicant = VALUES(applicant),
+            inventor = VALUES(inventor),
+            sponsor = VALUES(sponsor),
+            agent = VALUES(agent),
+            application_date = VALUES(application_date),
+            notification = VALUES(notification),
+            issue_date = VALUES(issue_date),
+            fee_reduction = VALUES(fee_reduction),
+            remark = VALUES(remark),
+            create_time = VALUES(create_time),
+            update_time = VALUES(update_time),
+        </trim>
+    </insert>
+
+    <!-- 根据主键删除记录 -->
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM patent_supplementary
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 根据主键更新记录 -->
+    <update id="updateById" parameterType="com.chen.intellectualproperty.entity.PatentSupplementary">
+        UPDATE patent_supplementary
+        SET
+        <trim suffixOverrides=",">
+            <if test="seqNo != null">
+                seq_no = #{seqNo},
+            </if>
+            <if test="applicationNo != null">
+                application_no = #{applicationNo},
+            </if>
+            <if test="patentName != null">
+                patent_name = #{patentName},
+            </if>
+            <if test="applicant != null">
+                applicant = #{applicant},
+            </if>
+            <if test="inventor != null">
+                inventor = #{inventor},
+            </if>
+            <if test="sponsor != null">
+                sponsor = #{sponsor},
+            </if>
+            <if test="agent != null">
+                agent = #{agent},
+            </if>
+            <if test="applicationDate != null">
+                application_date = #{applicationDate},
+            </if>
+            <if test="notification != null">
+                notification = #{notification},
+            </if>
+            <if test="issueDate != null">
+                issue_date = #{issueDate},
+            </if>
+            <if test="feeReduction != null">
+                fee_reduction = #{feeReduction},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            create_time = #{createTime},
+            update_time = #{updateTime},
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据主键查询记录 -->
+    <select id="selectById" parameterType="Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM patent_supplementary
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询所有记录 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM patent_supplementary
+    </select>
+
+    <!-- 分页查询 -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM patent_supplementary
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 查询总记录数 -->
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM patent_supplementary
+    </select>
+
+    <!-- 根据参数条件查询列表 -->
+    <select id="findListByParam" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM patent_supplementary
+        <where>
+            <if test="param.id != null">
+                AND id = #{param.id}
+            </if>
+            <if test="param.seqNo != null">
+                AND seq_no = #{param.seqNo}
+            </if>
+            <if test="param.applicationNo != null">
+                AND application_no = #{param.applicationNo}
+            </if>
+            <if test="param.patentName != null">
+                AND patent_name = #{param.patentName}
+            </if>
+            <if test="param.applicant != null">
+                AND applicant = #{param.applicant}
+            </if>
+            <if test="param.inventor != null">
+                AND inventor = #{param.inventor}
+            </if>
+            <if test="param.sponsor != null">
+                AND sponsor = #{param.sponsor}
+            </if>
+            <if test="param.agent != null">
+                AND agent = #{param.agent}
+            </if>
+            <if test="param.applicationDate != null">
+                AND application_date = #{param.applicationDate}
+            </if>
+            <if test="param.notification != null">
+                AND notification = #{param.notification}
+            </if>
+            <if test="param.issueDate != null">
+                AND issue_date = #{param.issueDate}
+            </if>
+            <if test="param.feeReduction != null">
+                AND fee_reduction = #{param.feeReduction}
+            </if>
+            <if test="param.remark != null">
+                AND remark = #{param.remark}
+            </if>
+            <if test="param.createTime != null">
+                AND create_time = #{param.createTime}
+            </if>
+            <if test="param.updateTime != null">
+                AND update_time = #{param.updateTime}
+            </if>
+        </where>
+        <if test="param.orderBy != null and param.orderBy != ''">
+            ORDER BY ${param.orderBy}
+        </if>
+    </select>
+
+    <!-- 根据Map参数动态查询列表 -->
+    <select id="findListByParams" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM patent_supplementary
+        <where>
+            <if test="params != null and !params.isEmpty()">
+                <foreach collection="params.entrySet()" item="entry" separator=" AND ">
+                    <if test="entry.key != 'orderBy' and entry.value != null">
+                        ${entry.key} = #{entry.value}
+                    </if>
+                </foreach>
+            </if>
+        </where>
+        <if test="params != null and params.orderBy != null and params.orderBy != ''">
+            ORDER BY ${params.orderBy}
+        </if>
+    </select>
+
+    <!-- 根据参数条件查询总数 -->
+    <select id="selectCount" resultType="long">
+        SELECT COUNT(*) FROM patent_supplementary
+        <where>
+            <if test="param.id != null">
+                AND id = #{param.id}
+            </if>
+            <if test="param.seqNo != null">
+                AND seq_no = #{param.seqNo}
+            </if>
+            <if test="param.applicationNo != null">
+                AND application_no = #{param.applicationNo}
+            </if>
+            <if test="param.patentName != null">
+                AND patent_name = #{param.patentName}
+            </if>
+            <if test="param.applicant != null">
+                AND applicant = #{param.applicant}
+            </if>
+            <if test="param.inventor != null">
+                AND inventor = #{param.inventor}
+            </if>
+            <if test="param.sponsor != null">
+                AND sponsor = #{param.sponsor}
+            </if>
+            <if test="param.agent != null">
+                AND agent = #{param.agent}
+            </if>
+            <if test="param.applicationDate != null">
+                AND application_date = #{param.applicationDate}
+            </if>
+            <if test="param.notification != null">
+                AND notification = #{param.notification}
+            </if>
+            <if test="param.issueDate != null">
+                AND issue_date = #{param.issueDate}
+            </if>
+            <if test="param.feeReduction != null">
+                AND fee_reduction = #{param.feeReduction}
+            </if>
+            <if test="param.remark != null">
+                AND remark = #{param.remark}
+            </if>
+            <if test="param.createTime != null">
+                AND create_time = #{param.createTime}
+            </if>
+            <if test="param.updateTime != null">
+                AND update_time = #{param.updateTime}
+            </if>
+        </where>
+    </select>
+
+</mapper>

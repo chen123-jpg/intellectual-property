@@ -1,0 +1,24 @@
+server:
+  port: 8080
+  address: 0.0.0.0
+
+spring:
+  application:
+    name: intellectual-property
+
+  datasource:
+    url: "jdbc:mysql://localhost:2006/intellectual-property?useSSL=false&serverTimezone=UTC&characterEncoding=utf8"
+    username: chen
+    password: Cc20060706.
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+    swagger-ui:
+      enabled: true
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true

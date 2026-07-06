@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+    表名: patent_pct
+    表注释: PCT国际申请表
+    生成时间: Mon Jul 06 19:14:26 CST 2026
+-->
+<mapper namespace="com.chen.intellectualproperty.mapper.PatentPctMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.entity.PatentPct">
+        <id column="id" jdbcType="BIGINT" property="id" /> <!-- 主键ID -->
+        <result column="seq_no" jdbcType="INTEGER" property="seqNo" /> <!-- 序号 -->
+        <result column="pct_internal_no" jdbcType="VARCHAR" property="pctInternalNo" /> <!-- PCT内部编号 -->
+        <result column="status" jdbcType="VARCHAR" property="status" /> <!-- 状态 -->
+        <result column="issue_date" jdbcType="DATE" property="issueDate" /> <!-- 发文日 -->
+        <result column="prior_internal_no" jdbcType="VARCHAR" property="priorInternalNo" /> <!-- 在先内部编号 -->
+        <result column="prior_application_no" jdbcType="VARCHAR" property="priorApplicationNo" /> <!-- 在先申请号 -->
+        <result column="prior_application_date" jdbcType="DATE" property="priorApplicationDate" /> <!-- 在先申请日 -->
+        <result column="pct_application_date" jdbcType="DATE" property="pctApplicationDate" /> <!-- PCT申请日 -->
+        <result column="application_name" jdbcType="VARCHAR" property="applicationName" /> <!-- 申请名称 -->
+        <result column="application_no" jdbcType="VARCHAR" property="applicationNo" /> <!-- 申请号（PCT号） -->
+        <result column="applicant" jdbcType="VARCHAR" property="applicant" /> <!-- 申请人 -->
+        <result column="inventor" jdbcType="VARCHAR" property="inventor" /> <!-- 发明人 -->
+        <result column="sponsor" jdbcType="VARCHAR" property="sponsor" /> <!-- 主办人 -->
+        <result column="agent" jdbcType="VARCHAR" property="agent" /> <!-- 委托书代理人 -->
+        <result column="preliminary_conclusion" jdbcType="VARCHAR" property="preliminaryConclusion" /> <!-- 初检结论 -->
+        <result column="remark" jdbcType="VARCHAR" property="remark" /> <!-- 备注 -->
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" /> <!-- 创建时间 -->
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" /> <!-- 更新时间 -->
+    </resultMap>
+
+    <!-- 基础列列表 -->
+    <sql id="Base_Column_List">
+        id, seq_no, pct_internal_no, status, issue_date, prior_internal_no, prior_application_no, prior_application_date, pct_application_date, application_name, application_no, applicant, inventor, sponsor, agent, preliminary_conclusion, remark, create_time, update_time
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="insert" parameterType="com.chen.intellectualproperty.entity.PatentPct">
+        INSERT INTO patent_pct (
+        <trim suffixOverrides=",">
+            id,
+            <if test="seqNo != null">seq_no,</if>
+            <if test="pctInternalNo != null">pct_internal_no,</if>
+            <if test="status != null">status,</if>
+            <if test="issueDate != null">issue_date,</if>
+            <if test="priorInternalNo != null">prior_internal_no,</if>
+            <if test="priorApplicationNo != null">prior_application_no,</if>
+            <if test="priorApplicationDate != null">prior_application_date,</if>
+            <if test="pctApplicationDate != null">pct_application_date,</if>
+            <if test="applicationName != null">application_name,</if>
+            <if test="applicationNo != null">application_no,</if>
+            <if test="applicant != null">applicant,</if>
+            <if test="inventor != null">inventor,</if>
+            <if test="sponsor != null">sponsor,</if>
+            <if test="agent != null">agent,</if>
+            <if test="preliminaryConclusion != null">preliminary_conclusion,</if>
+            <if test="remark != null">remark,</if>
+            create_time,
+            update_time,
+        </trim>
+        ) VALUES (
+        <trim suffixOverrides=",">
+            #{id},
+            <if test="seqNo != null">#{seqNo},</if>
+            <if test="pctInternalNo != null">#{pctInternalNo},</if>
+            <if test="status != null">#{status},</if>
+            <if test="issueDate != null">#{issueDate},</if>
+            <if test="priorInternalNo != null">#{priorInternalNo},</if>
+            <if test="priorApplicationNo != null">#{priorApplicationNo},</if>
+            <if test="priorApplicationDate != null">#{priorApplicationDate},</if>
+            <if test="pctApplicationDate != null">#{pctApplicationDate},</if>
+            <if test="applicationName != null">#{applicationName},</if>
+            <if test="applicationNo != null">#{applicationNo},</if>
+            <if test="applicant != null">#{applicant},</if>
+            <if test="inventor != null">#{inventor},</if>
+            <if test="sponsor != null">#{sponsor},</if>
+            <if test="agent != null">#{agent},</if>
+            <if test="preliminaryConclusion != null">#{preliminaryConclusion},</if>
+            <if test="remark != null">#{remark},</if>
+            #{createTime},
+            #{updateTime},
+        </trim>
+        )
+    </insert>
+
+    <!-- 插入或更新记录 -->
+    <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.entity.PatentPct">
+        INSERT INTO patent_pct (
+        <trim suffixOverrides=",">
+            id,
+            <if test="seqNo != null">seq_no,</if>
+            <if test="pctInternalNo != null">pct_internal_no,</if>
+            <if test="status != null">status,</if>
+            <if test="issueDate != null">issue_date,</if>
+            <if test="priorInternalNo != null">prior_internal_no,</if>
+            <if test="priorApplicationNo != null">prior_application_no,</if>
+            <if test="priorApplicationDate != null">prior_application_date,</if>
+            <if test="pctApplicationDate != null">pct_application_date,</if>
+            <if test="applicationName != null">application_name,</if>
+            <if test="applicationNo != null">application_no,</if>
+            <if test="applicant != null">applicant,</if>
+            <if test="inventor != null">inventor,</if>
+            <if test="sponsor != null">sponsor,</if>
+            <if test="agent != null">agent,</if>
+            <if test="preliminaryConclusion != null">preliminary_conclusion,</if>
+            <if test="remark != null">remark,</if>
+            create_time,
+            update_time,
+        </trim>
+        ) VALUES (
+        <trim suffixOverrides=",">
+            #{id},
+            <if test="seqNo != null">#{seqNo},</if>
+            <if test="pctInternalNo != null">#{pctInternalNo},</if>
+            <if test="status != null">#{status},</if>
+            <if test="issueDate != null">#{issueDate},</if>
+            <if test="priorInternalNo != null">#{priorInternalNo},</if>
+            <if test="priorApplicationNo != null">#{priorApplicationNo},</if>
+            <if test="priorApplicationDate != null">#{priorApplicationDate},</if>
+            <if test="pctApplicationDate != null">#{pctApplicationDate},</if>
+            <if test="applicationName != null">#{applicationName},</if>
+            <if test="applicationNo != null">#{applicationNo},</if>
+            <if test="applicant != null">#{applicant},</if>
+            <if test="inventor != null">#{inventor},</if>
+            <if test="sponsor != null">#{sponsor},</if>
+            <if test="agent != null">#{agent},</if>
+            <if test="preliminaryConclusion != null">#{preliminaryConclusion},</if>
+            <if test="remark != null">#{remark},</if>
+            #{createTime},
+            #{updateTime},
+        </trim>
+        )
+        ON DUPLICATE KEY UPDATE
+        <trim suffixOverrides=",">
+            id = VALUES(id),
+            seq_no = VALUES(seq_no),
+            pct_internal_no = VALUES(pct_internal_no),
+            status = VALUES(status),
+            issue_date = VALUES(issue_date),
+            prior_internal_no = VALUES(prior_internal_no),
+            prior_application_no = VALUES(prior_application_no),
+            prior_application_date = VALUES(prior_application_date),
+            pct_application_date = VALUES(pct_application_date),
+            application_name = VALUES(application_name),
+            application_no = VALUES(application_no),
+            applicant = VALUES(applicant),
+            inventor = VALUES(inventor),
+            sponsor = VALUES(sponsor),
+            agent = VALUES(agent),
+            preliminary_conclusion = VALUES(preliminary_conclusion),
+            remark = VALUES(remark),
+            create_time = VALUES(create_time),
+            update_time = VALUES(update_time),
+        </trim>
+    </insert>
+
+    <!-- 根据主键删除记录 -->
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM patent_pct
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 根据主键更新记录 -->
+    <update id="updateById" parameterType="com.chen.intellectualproperty.entity.PatentPct">
+        UPDATE patent_pct
+        SET
+        <trim suffixOverrides=",">
+            <if test="seqNo != null">
+                seq_no = #{seqNo},
+            </if>
+            <if test="pctInternalNo != null">
+                pct_internal_no = #{pctInternalNo},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="issueDate != null">
+                issue_date = #{issueDate},
+            </if>
+            <if test="priorInternalNo != null">
+                prior_internal_no = #{priorInternalNo},
+            </if>
+            <if test="priorApplicationNo != null">
+                prior_application_no = #{priorApplicationNo},
+            </if>
+            <if test="priorApplicationDate != null">
+                prior_application_date = #{priorApplicationDate},
+            </if>
+            <if test="pctApplicationDate != null">
+                pct_application_date = #{pctApplicationDate},
+            </if>
+            <if test="applicationName != null">
+                application_name = #{applicationName},
+            </if>
+            <if test="applicationNo != null">
+                application_no = #{applicationNo},
+            </if>
+            <if test="applicant != null">
+                applicant = #{applicant},
+            </if>
+            <if test="inventor != null">
+                inventor = #{inventor},
+            </if>
+            <if test="sponsor != null">
+                sponsor = #{sponsor},
+            </if>
+            <if test="agent != null">
+                agent = #{agent},
+            </if>
+            <if test="preliminaryConclusion != null">
+                preliminary_conclusion = #{preliminaryConclusion},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            create_time = #{createTime},
+            update_time = #{updateTime},
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据主键查询记录 -->
+    <select id="selectById" parameterType="Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM patent_pct
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询所有记录 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM patent_pct
+    </select>
+
+    <!-- 分页查询 -->
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM patent_pct
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 查询总记录数 -->
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM patent_pct
+    </select>
+
+    <!-- 根据参数条件查询列表 -->
+    <select id="findListByParam" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM patent_pct
+        <where>
+            <if test="param.id != null">
+                AND id = #{param.id}
+            </if>
+            <if test="param.seqNo != null">
+                AND seq_no = #{param.seqNo}
+            </if>
+            <if test="param.pctInternalNo != null">
+                AND pct_internal_no = #{param.pctInternalNo}
+            </if>
+            <if test="param.status != null">
+                AND status = #{param.status}
+            </if>
+            <if test="param.issueDate != null">
+                AND issue_date = #{param.issueDate}
+            </if>
+            <if test="param.priorInternalNo != null">
+                AND prior_internal_no = #{param.priorInternalNo}
+            </if>
+            <if test="param.priorApplicationNo != null">
+                AND prior_application_no = #{param.priorApplicationNo}
+            </if>
+            <if test="param.priorApplicationDate != null">
+                AND prior_application_date = #{param.priorApplicationDate}
+            </if>
+            <if test="param.pctApplicationDate != null">
+                AND pct_application_date = #{param.pctApplicationDate}
+            </if>
+            <if test="param.applicationName != null">
+                AND application_name = #{param.applicationName}
+            </if>
+            <if test="param.applicationNo != null">
+                AND application_no = #{param.applicationNo}
+            </if>
+            <if test="param.applicant != null">
+                AND applicant = #{param.applicant}
+            </if>
+            <if test="param.inventor != null">
+                AND inventor = #{param.inventor}
+            </if>
+            <if test="param.sponsor != null">
+                AND sponsor = #{param.sponsor}
+            </if>
+            <if test="param.agent != null">
+                AND agent = #{param.agent}
+            </if>
+            <if test="param.preliminaryConclusion != null">
+                AND preliminary_conclusion = #{param.preliminaryConclusion}
+            </if>
+            <if test="param.remark != null">
+                AND remark = #{param.remark}
+            </if>
+            <if test="param.createTime != null">
+                AND create_time = #{param.createTime}
+            </if>
+            <if test="param.updateTime != null">
+                AND update_time = #{param.updateTime}
+            </if>
+        </where>
+        <if test="param.orderBy != null and param.orderBy != ''">
+            ORDER BY ${param.orderBy}
+        </if>
+    </select>
+
+    <!-- 根据Map参数动态查询列表 -->
+    <select id="findListByParams" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM patent_pct
+        <where>
+            <if test="params != null and !params.isEmpty()">
+                <foreach collection="params.entrySet()" item="entry" separator=" AND ">
+                    <if test="entry.key != 'orderBy' and entry.value != null">
+                        ${entry.key} = #{entry.value}
+                    </if>
+                </foreach>
+            </if>
+        </where>
+        <if test="params != null and params.orderBy != null and params.orderBy != ''">
+            ORDER BY ${params.orderBy}
+        </if>
+    </select>
+
+    <!-- 根据参数条件查询总数 -->
+    <select id="selectCount" resultType="long">
+        SELECT COUNT(*) FROM patent_pct
+        <where>
+            <if test="param.id != null">
+                AND id = #{param.id}
+            </if>
+            <if test="param.seqNo != null">
+                AND seq_no = #{param.seqNo}
+            </if>
+            <if test="param.pctInternalNo != null">
+                AND pct_internal_no = #{param.pctInternalNo}
+            </if>
+            <if test="param.status != null">
+                AND status = #{param.status}
+            </if>
+            <if test="param.issueDate != null">
+                AND issue_date = #{param.issueDate}
+            </if>
+            <if test="param.priorInternalNo != null">
+                AND prior_internal_no = #{param.priorInternalNo}
+            </if>
+            <if test="param.priorApplicationNo != null">
+                AND prior_application_no = #{param.priorApplicationNo}
+            </if>
+            <if test="param.priorApplicationDate != null">
+                AND prior_application_date = #{param.priorApplicationDate}
+            </if>
+            <if test="param.pctApplicationDate != null">
+                AND pct_application_date = #{param.pctApplicationDate}
+            </if>
+            <if test="param.applicationName != null">
+                AND application_name = #{param.applicationName}
+            </if>
+            <if test="param.applicationNo != null">
+                AND application_no = #{param.applicationNo}
+            </if>
+            <if test="param.applicant != null">
+                AND applicant = #{param.applicant}
+            </if>
+            <if test="param.inventor != null">
+                AND inventor = #{param.inventor}
+            </if>
+            <if test="param.sponsor != null">
+                AND sponsor = #{param.sponsor}
+            </if>
+            <if test="param.agent != null">
+                AND agent = #{param.agent}
+            </if>
+            <if test="param.preliminaryConclusion != null">
+                AND preliminary_conclusion = #{param.preliminaryConclusion}
+            </if>
+            <if test="param.remark != null">
+                AND remark = #{param.remark}
+            </if>
+            <if test="param.createTime != null">
+                AND create_time = #{param.createTime}
+            </if>
+            <if test="param.updateTime != null">
+                AND update_time = #{param.updateTime}
+            </if>
+        </where>
+    </select>
+
+</mapper>
