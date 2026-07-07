@@ -21,7 +21,7 @@ public class Result<T> {
 
     public static <T> Result<T> success(T data, String message) {
         Result<T> r = new Result<>();
-        r.code = 0;
+        r.code = 200;
         r.message = message;
         r.data = data;
         return r;

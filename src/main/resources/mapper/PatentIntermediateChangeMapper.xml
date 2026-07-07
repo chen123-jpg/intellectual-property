@@ -3,7 +3,7 @@
 <!-- 
     表名: patent_intermediate_change
     表注释: 中间著变专利表（有重复）
-    生成时间: Mon Jul 06 19:14:26 CST 2026
+    生成时间: Tue Jul 07 14:49:18 CST 2026
 -->
 <mapper namespace="com.chen.intellectualproperty.mapper.PatentIntermediateChangeMapper">
 
@@ -40,112 +40,152 @@
 
     <!-- 插入记录 -->
     <insert id="insert" parameterType="com.chen.intellectualproperty.entity.PatentIntermediateChange">
-        INSERT INTO patent_intermediate_change (
-        <trim suffixOverrides=",">
-            id,
-            <if test="seqNo != null">seq_no,</if>
-            <if test="internalNo != null">internal_no,</if>
-            <if test="businessType != null">business_type,</if>
-            <if test="applicationNo != null">application_no,</if>
-            <if test="patentName != null">patent_name,</if>
-            <if test="applicant != null">applicant,</if>
-            <if test="inventor != null">inventor,</if>
-            <if test="sponsor != null">sponsor,</if>
-            <if test="agent != null">agent,</if>
-            <if test="applicationDate != null">application_date,</if>
-            <if test="status != null">status,</if>
-            <if test="issueDate != null">issue_date,</if>
-            <if test="feeReductionInfo != null">fee_reduction_info,</if>
-            <if test="submitDate != null">submit_date,</if>
-            <if test="paymentDeadline != null">payment_deadline,</if>
-            <if test="feeAmount != null">fee_amount,</if>
-            <if test="paymentStatus != null">payment_status,</if>
-            <if test="remark1 != null">remark1,</if>
-            <if test="remark2 != null">remark2,</if>
-            create_time,
-            update_time,
+        INSERT INTO patent_intermediate_change
+        <trim prefix="SET" suffixOverrides=",">
+            id = #{id},
+            <if test="seqNo != null">
+                seq_no = #{seqNo},
+            </if>
+            <if test="internalNo != null">
+                internal_no = #{internalNo},
+            </if>
+            <if test="businessType != null">
+                business_type = #{businessType},
+            </if>
+            <if test="applicationNo != null">
+                application_no = #{applicationNo},
+            </if>
+            <if test="patentName != null">
+                patent_name = #{patentName},
+            </if>
+            <if test="applicant != null">
+                applicant = #{applicant},
+            </if>
+            <if test="inventor != null">
+                inventor = #{inventor},
+            </if>
+            <if test="sponsor != null">
+                sponsor = #{sponsor},
+            </if>
+            <if test="agent != null">
+                agent = #{agent},
+            </if>
+            <if test="applicationDate != null">
+                application_date = #{applicationDate},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="issueDate != null">
+                issue_date = #{issueDate},
+            </if>
+            <if test="feeReductionInfo != null">
+                fee_reduction_info = #{feeReductionInfo},
+            </if>
+            <if test="submitDate != null">
+                submit_date = #{submitDate},
+            </if>
+            <if test="paymentDeadline != null">
+                payment_deadline = #{paymentDeadline},
+            </if>
+            <if test="feeAmount != null">
+                fee_amount = #{feeAmount},
+            </if>
+            <if test="paymentStatus != null">
+                payment_status = #{paymentStatus},
+            </if>
+            <if test="remark1 != null">
+                remark1 = #{remark1},
+            </if>
+            <if test="remark2 != null">
+                remark2 = #{remark2},
+            </if>
+            create_time =
+            <choose>
+                <when test="createTime != null">
+                    #{createTime}
+                </when>
+                <otherwise>
+                    NOW()
+                </otherwise>
+            </choose>,
+            update_time = NOW(),
         </trim>
-        ) VALUES (
-        <trim suffixOverrides=",">
-            #{id},
-            <if test="seqNo != null">#{seqNo},</if>
-            <if test="internalNo != null">#{internalNo},</if>
-            <if test="businessType != null">#{businessType},</if>
-            <if test="applicationNo != null">#{applicationNo},</if>
-            <if test="patentName != null">#{patentName},</if>
-            <if test="applicant != null">#{applicant},</if>
-            <if test="inventor != null">#{inventor},</if>
-            <if test="sponsor != null">#{sponsor},</if>
-            <if test="agent != null">#{agent},</if>
-            <if test="applicationDate != null">#{applicationDate},</if>
-            <if test="status != null">#{status},</if>
-            <if test="issueDate != null">#{issueDate},</if>
-            <if test="feeReductionInfo != null">#{feeReductionInfo},</if>
-            <if test="submitDate != null">#{submitDate},</if>
-            <if test="paymentDeadline != null">#{paymentDeadline},</if>
-            <if test="feeAmount != null">#{feeAmount},</if>
-            <if test="paymentStatus != null">#{paymentStatus},</if>
-            <if test="remark1 != null">#{remark1},</if>
-            <if test="remark2 != null">#{remark2},</if>
-            #{createTime},
-            #{updateTime},
-        </trim>
-        )
     </insert>
 
     <!-- 插入或更新记录 -->
     <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.entity.PatentIntermediateChange">
-        INSERT INTO patent_intermediate_change (
-        <trim suffixOverrides=",">
-            id,
-            <if test="seqNo != null">seq_no,</if>
-            <if test="internalNo != null">internal_no,</if>
-            <if test="businessType != null">business_type,</if>
-            <if test="applicationNo != null">application_no,</if>
-            <if test="patentName != null">patent_name,</if>
-            <if test="applicant != null">applicant,</if>
-            <if test="inventor != null">inventor,</if>
-            <if test="sponsor != null">sponsor,</if>
-            <if test="agent != null">agent,</if>
-            <if test="applicationDate != null">application_date,</if>
-            <if test="status != null">status,</if>
-            <if test="issueDate != null">issue_date,</if>
-            <if test="feeReductionInfo != null">fee_reduction_info,</if>
-            <if test="submitDate != null">submit_date,</if>
-            <if test="paymentDeadline != null">payment_deadline,</if>
-            <if test="feeAmount != null">fee_amount,</if>
-            <if test="paymentStatus != null">payment_status,</if>
-            <if test="remark1 != null">remark1,</if>
-            <if test="remark2 != null">remark2,</if>
-            create_time,
-            update_time,
+        INSERT INTO patent_intermediate_change
+        <trim prefix="SET" suffixOverrides=",">
+            id = #{id},
+            <if test="seqNo != null">
+                seq_no = #{seqNo},
+            </if>
+            <if test="internalNo != null">
+                internal_no = #{internalNo},
+            </if>
+            <if test="businessType != null">
+                business_type = #{businessType},
+            </if>
+            <if test="applicationNo != null">
+                application_no = #{applicationNo},
+            </if>
+            <if test="patentName != null">
+                patent_name = #{patentName},
+            </if>
+            <if test="applicant != null">
+                applicant = #{applicant},
+            </if>
+            <if test="inventor != null">
+                inventor = #{inventor},
+            </if>
+            <if test="sponsor != null">
+                sponsor = #{sponsor},
+            </if>
+            <if test="agent != null">
+                agent = #{agent},
+            </if>
+            <if test="applicationDate != null">
+                application_date = #{applicationDate},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="issueDate != null">
+                issue_date = #{issueDate},
+            </if>
+            <if test="feeReductionInfo != null">
+                fee_reduction_info = #{feeReductionInfo},
+            </if>
+            <if test="submitDate != null">
+                submit_date = #{submitDate},
+            </if>
+            <if test="paymentDeadline != null">
+                payment_deadline = #{paymentDeadline},
+            </if>
+            <if test="feeAmount != null">
+                fee_amount = #{feeAmount},
+            </if>
+            <if test="paymentStatus != null">
+                payment_status = #{paymentStatus},
+            </if>
+            <if test="remark1 != null">
+                remark1 = #{remark1},
+            </if>
+            <if test="remark2 != null">
+                remark2 = #{remark2},
+            </if>
+            create_time =
+            <choose>
+                <when test="createTime != null">
+                    #{createTime}
+                </when>
+                <otherwise>
+                    NOW()
+                </otherwise>
+            </choose>,
+            update_time = NOW(),
         </trim>
-        ) VALUES (
-        <trim suffixOverrides=",">
-            #{id},
-            <if test="seqNo != null">#{seqNo},</if>
-            <if test="internalNo != null">#{internalNo},</if>
-            <if test="businessType != null">#{businessType},</if>
-            <if test="applicationNo != null">#{applicationNo},</if>
-            <if test="patentName != null">#{patentName},</if>
-            <if test="applicant != null">#{applicant},</if>
-            <if test="inventor != null">#{inventor},</if>
-            <if test="sponsor != null">#{sponsor},</if>
-            <if test="agent != null">#{agent},</if>
-            <if test="applicationDate != null">#{applicationDate},</if>
-            <if test="status != null">#{status},</if>
-            <if test="issueDate != null">#{issueDate},</if>
-            <if test="feeReductionInfo != null">#{feeReductionInfo},</if>
-            <if test="submitDate != null">#{submitDate},</if>
-            <if test="paymentDeadline != null">#{paymentDeadline},</if>
-            <if test="feeAmount != null">#{feeAmount},</if>
-            <if test="paymentStatus != null">#{paymentStatus},</if>
-            <if test="remark1 != null">#{remark1},</if>
-            <if test="remark2 != null">#{remark2},</if>
-            #{createTime},
-            #{updateTime},
-        </trim>
-        )
         ON DUPLICATE KEY UPDATE
         <trim suffixOverrides=",">
             id = VALUES(id),
@@ -169,7 +209,7 @@
             remark1 = VALUES(remark1),
             remark2 = VALUES(remark2),
             create_time = VALUES(create_time),
-            update_time = VALUES(update_time),
+            update_time = NOW(),
         </trim>
     </insert>
 
@@ -241,8 +281,7 @@
             <if test="remark2 != null">
                 remark2 = #{remark2},
             </if>
-            create_time = #{createTime},
-            update_time = #{updateTime},
+            update_time = NOW(),
         </trim>
         WHERE id = #{id}
     </update>

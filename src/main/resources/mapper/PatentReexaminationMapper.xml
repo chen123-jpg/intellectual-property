@@ -3,7 +3,7 @@
 <!-- 
     表名: patent_reexamination
     表注释: 复审无效专利表
-    生成时间: Mon Jul 06 19:14:26 CST 2026
+    生成时间: Tue Jul 07 14:49:18 CST 2026
 -->
 <mapper namespace="com.chen.intellectualproperty.mapper.PatentReexaminationMapper">
 
@@ -38,104 +38,140 @@
 
     <!-- 插入记录 -->
     <insert id="insert" parameterType="com.chen.intellectualproperty.entity.PatentReexamination">
-        INSERT INTO patent_reexamination (
-        <trim suffixOverrides=",">
-            id,
-            <if test="seqNo != null">seq_no,</if>
-            <if test="patentType != null">patent_type,</if>
-            <if test="category != null">category,</if>
-            <if test="caseNo != null">case_no,</if>
-            <if test="internalNo != null">internal_no,</if>
-            <if test="applicationNo != null">application_no,</if>
-            <if test="patentName != null">patent_name,</if>
-            <if test="applicant != null">applicant,</if>
-            <if test="sponsor != null">sponsor,</if>
-            <if test="agent != null">agent,</if>
-            <if test="notification != null">notification,</if>
-            <if test="issueDate != null">issue_date,</if>
-            <if test="submitDate != null">submit_date,</if>
-            <if test="queryInfo != null">query_info,</if>
-            <if test="officialFee != null">official_fee,</if>
-            <if test="paymentDate != null">payment_date,</if>
-            <if test="note1 != null">note1,</if>
-            create_time,
-            update_time,
+        INSERT INTO patent_reexamination
+        <trim prefix="SET" suffixOverrides=",">
+            id = #{id},
+            <if test="seqNo != null">
+                seq_no = #{seqNo},
+            </if>
+            <if test="patentType != null">
+                patent_type = #{patentType},
+            </if>
+            <if test="category != null">
+                category = #{category},
+            </if>
+            <if test="caseNo != null">
+                case_no = #{caseNo},
+            </if>
+            <if test="internalNo != null">
+                internal_no = #{internalNo},
+            </if>
+            <if test="applicationNo != null">
+                application_no = #{applicationNo},
+            </if>
+            <if test="patentName != null">
+                patent_name = #{patentName},
+            </if>
+            <if test="applicant != null">
+                applicant = #{applicant},
+            </if>
+            <if test="sponsor != null">
+                sponsor = #{sponsor},
+            </if>
+            <if test="agent != null">
+                agent = #{agent},
+            </if>
+            <if test="notification != null">
+                notification = #{notification},
+            </if>
+            <if test="issueDate != null">
+                issue_date = #{issueDate},
+            </if>
+            <if test="submitDate != null">
+                submit_date = #{submitDate},
+            </if>
+            <if test="queryInfo != null">
+                query_info = #{queryInfo},
+            </if>
+            <if test="officialFee != null">
+                official_fee = #{officialFee},
+            </if>
+            <if test="paymentDate != null">
+                payment_date = #{paymentDate},
+            </if>
+            <if test="note1 != null">
+                note1 = #{note1},
+            </if>
+            create_time =
+            <choose>
+                <when test="createTime != null">
+                    #{createTime}
+                </when>
+                <otherwise>
+                    NOW()
+                </otherwise>
+            </choose>,
+            update_time = NOW(),
         </trim>
-        ) VALUES (
-        <trim suffixOverrides=",">
-            #{id},
-            <if test="seqNo != null">#{seqNo},</if>
-            <if test="patentType != null">#{patentType},</if>
-            <if test="category != null">#{category},</if>
-            <if test="caseNo != null">#{caseNo},</if>
-            <if test="internalNo != null">#{internalNo},</if>
-            <if test="applicationNo != null">#{applicationNo},</if>
-            <if test="patentName != null">#{patentName},</if>
-            <if test="applicant != null">#{applicant},</if>
-            <if test="sponsor != null">#{sponsor},</if>
-            <if test="agent != null">#{agent},</if>
-            <if test="notification != null">#{notification},</if>
-            <if test="issueDate != null">#{issueDate},</if>
-            <if test="submitDate != null">#{submitDate},</if>
-            <if test="queryInfo != null">#{queryInfo},</if>
-            <if test="officialFee != null">#{officialFee},</if>
-            <if test="paymentDate != null">#{paymentDate},</if>
-            <if test="note1 != null">#{note1},</if>
-            #{createTime},
-            #{updateTime},
-        </trim>
-        )
     </insert>
 
     <!-- 插入或更新记录 -->
     <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.entity.PatentReexamination">
-        INSERT INTO patent_reexamination (
-        <trim suffixOverrides=",">
-            id,
-            <if test="seqNo != null">seq_no,</if>
-            <if test="patentType != null">patent_type,</if>
-            <if test="category != null">category,</if>
-            <if test="caseNo != null">case_no,</if>
-            <if test="internalNo != null">internal_no,</if>
-            <if test="applicationNo != null">application_no,</if>
-            <if test="patentName != null">patent_name,</if>
-            <if test="applicant != null">applicant,</if>
-            <if test="sponsor != null">sponsor,</if>
-            <if test="agent != null">agent,</if>
-            <if test="notification != null">notification,</if>
-            <if test="issueDate != null">issue_date,</if>
-            <if test="submitDate != null">submit_date,</if>
-            <if test="queryInfo != null">query_info,</if>
-            <if test="officialFee != null">official_fee,</if>
-            <if test="paymentDate != null">payment_date,</if>
-            <if test="note1 != null">note1,</if>
-            create_time,
-            update_time,
+        INSERT INTO patent_reexamination
+        <trim prefix="SET" suffixOverrides=",">
+            id = #{id},
+            <if test="seqNo != null">
+                seq_no = #{seqNo},
+            </if>
+            <if test="patentType != null">
+                patent_type = #{patentType},
+            </if>
+            <if test="category != null">
+                category = #{category},
+            </if>
+            <if test="caseNo != null">
+                case_no = #{caseNo},
+            </if>
+            <if test="internalNo != null">
+                internal_no = #{internalNo},
+            </if>
+            <if test="applicationNo != null">
+                application_no = #{applicationNo},
+            </if>
+            <if test="patentName != null">
+                patent_name = #{patentName},
+            </if>
+            <if test="applicant != null">
+                applicant = #{applicant},
+            </if>
+            <if test="sponsor != null">
+                sponsor = #{sponsor},
+            </if>
+            <if test="agent != null">
+                agent = #{agent},
+            </if>
+            <if test="notification != null">
+                notification = #{notification},
+            </if>
+            <if test="issueDate != null">
+                issue_date = #{issueDate},
+            </if>
+            <if test="submitDate != null">
+                submit_date = #{submitDate},
+            </if>
+            <if test="queryInfo != null">
+                query_info = #{queryInfo},
+            </if>
+            <if test="officialFee != null">
+                official_fee = #{officialFee},
+            </if>
+            <if test="paymentDate != null">
+                payment_date = #{paymentDate},
+            </if>
+            <if test="note1 != null">
+                note1 = #{note1},
+            </if>
+            create_time =
+            <choose>
+                <when test="createTime != null">
+                    #{createTime}
+                </when>
+                <otherwise>
+                    NOW()
+                </otherwise>
+            </choose>,
+            update_time = NOW(),
         </trim>
-        ) VALUES (
-        <trim suffixOverrides=",">
-            #{id},
-            <if test="seqNo != null">#{seqNo},</if>
-            <if test="patentType != null">#{patentType},</if>
-            <if test="category != null">#{category},</if>
-            <if test="caseNo != null">#{caseNo},</if>
-            <if test="internalNo != null">#{internalNo},</if>
-            <if test="applicationNo != null">#{applicationNo},</if>
-            <if test="patentName != null">#{patentName},</if>
-            <if test="applicant != null">#{applicant},</if>
-            <if test="sponsor != null">#{sponsor},</if>
-            <if test="agent != null">#{agent},</if>
-            <if test="notification != null">#{notification},</if>
-            <if test="issueDate != null">#{issueDate},</if>
-            <if test="submitDate != null">#{submitDate},</if>
-            <if test="queryInfo != null">#{queryInfo},</if>
-            <if test="officialFee != null">#{officialFee},</if>
-            <if test="paymentDate != null">#{paymentDate},</if>
-            <if test="note1 != null">#{note1},</if>
-            #{createTime},
-            #{updateTime},
-        </trim>
-        )
         ON DUPLICATE KEY UPDATE
         <trim suffixOverrides=",">
             id = VALUES(id),
@@ -157,7 +193,7 @@
             payment_date = VALUES(payment_date),
             note1 = VALUES(note1),
             create_time = VALUES(create_time),
-            update_time = VALUES(update_time),
+            update_time = NOW(),
         </trim>
     </insert>
 
@@ -223,8 +259,7 @@
             <if test="note1 != null">
                 note1 = #{note1},
             </if>
-            create_time = #{createTime},
-            update_time = #{updateTime},
+            update_time = NOW(),
         </trim>
         WHERE id = #{id}
     </update>

@@ -3,7 +3,7 @@
 <!-- 
     表名: patent_supplementary
     表注释: 补漏专利表
-    生成时间: Mon Jul 06 19:14:26 CST 2026
+    生成时间: Tue Jul 07 14:49:18 CST 2026
 -->
 <mapper namespace="com.chen.intellectualproperty.mapper.PatentSupplementaryMapper">
 
@@ -33,84 +33,110 @@
 
     <!-- 插入记录 -->
     <insert id="insert" parameterType="com.chen.intellectualproperty.entity.PatentSupplementary">
-        INSERT INTO patent_supplementary (
-        <trim suffixOverrides=",">
-            id,
-            <if test="seqNo != null">seq_no,</if>
-            <if test="applicationNo != null">application_no,</if>
-            <if test="patentName != null">patent_name,</if>
-            <if test="applicant != null">applicant,</if>
-            <if test="inventor != null">inventor,</if>
-            <if test="sponsor != null">sponsor,</if>
-            <if test="agent != null">agent,</if>
-            <if test="applicationDate != null">application_date,</if>
-            <if test="notification != null">notification,</if>
-            <if test="issueDate != null">issue_date,</if>
-            <if test="feeReduction != null">fee_reduction,</if>
-            <if test="remark != null">remark,</if>
-            create_time,
-            update_time,
+        INSERT INTO patent_supplementary
+        <trim prefix="SET" suffixOverrides=",">
+            id = #{id},
+            <if test="seqNo != null">
+                seq_no = #{seqNo},
+            </if>
+            <if test="applicationNo != null">
+                application_no = #{applicationNo},
+            </if>
+            <if test="patentName != null">
+                patent_name = #{patentName},
+            </if>
+            <if test="applicant != null">
+                applicant = #{applicant},
+            </if>
+            <if test="inventor != null">
+                inventor = #{inventor},
+            </if>
+            <if test="sponsor != null">
+                sponsor = #{sponsor},
+            </if>
+            <if test="agent != null">
+                agent = #{agent},
+            </if>
+            <if test="applicationDate != null">
+                application_date = #{applicationDate},
+            </if>
+            <if test="notification != null">
+                notification = #{notification},
+            </if>
+            <if test="issueDate != null">
+                issue_date = #{issueDate},
+            </if>
+            <if test="feeReduction != null">
+                fee_reduction = #{feeReduction},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            create_time =
+            <choose>
+                <when test="createTime != null">
+                    #{createTime}
+                </when>
+                <otherwise>
+                    NOW()
+                </otherwise>
+            </choose>,
+            update_time = NOW(),
         </trim>
-        ) VALUES (
-        <trim suffixOverrides=",">
-            #{id},
-            <if test="seqNo != null">#{seqNo},</if>
-            <if test="applicationNo != null">#{applicationNo},</if>
-            <if test="patentName != null">#{patentName},</if>
-            <if test="applicant != null">#{applicant},</if>
-            <if test="inventor != null">#{inventor},</if>
-            <if test="sponsor != null">#{sponsor},</if>
-            <if test="agent != null">#{agent},</if>
-            <if test="applicationDate != null">#{applicationDate},</if>
-            <if test="notification != null">#{notification},</if>
-            <if test="issueDate != null">#{issueDate},</if>
-            <if test="feeReduction != null">#{feeReduction},</if>
-            <if test="remark != null">#{remark},</if>
-            #{createTime},
-            #{updateTime},
-        </trim>
-        )
     </insert>
 
     <!-- 插入或更新记录 -->
     <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.entity.PatentSupplementary">
-        INSERT INTO patent_supplementary (
-        <trim suffixOverrides=",">
-            id,
-            <if test="seqNo != null">seq_no,</if>
-            <if test="applicationNo != null">application_no,</if>
-            <if test="patentName != null">patent_name,</if>
-            <if test="applicant != null">applicant,</if>
-            <if test="inventor != null">inventor,</if>
-            <if test="sponsor != null">sponsor,</if>
-            <if test="agent != null">agent,</if>
-            <if test="applicationDate != null">application_date,</if>
-            <if test="notification != null">notification,</if>
-            <if test="issueDate != null">issue_date,</if>
-            <if test="feeReduction != null">fee_reduction,</if>
-            <if test="remark != null">remark,</if>
-            create_time,
-            update_time,
+        INSERT INTO patent_supplementary
+        <trim prefix="SET" suffixOverrides=",">
+            id = #{id},
+            <if test="seqNo != null">
+                seq_no = #{seqNo},
+            </if>
+            <if test="applicationNo != null">
+                application_no = #{applicationNo},
+            </if>
+            <if test="patentName != null">
+                patent_name = #{patentName},
+            </if>
+            <if test="applicant != null">
+                applicant = #{applicant},
+            </if>
+            <if test="inventor != null">
+                inventor = #{inventor},
+            </if>
+            <if test="sponsor != null">
+                sponsor = #{sponsor},
+            </if>
+            <if test="agent != null">
+                agent = #{agent},
+            </if>
+            <if test="applicationDate != null">
+                application_date = #{applicationDate},
+            </if>
+            <if test="notification != null">
+                notification = #{notification},
+            </if>
+            <if test="issueDate != null">
+                issue_date = #{issueDate},
+            </if>
+            <if test="feeReduction != null">
+                fee_reduction = #{feeReduction},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            create_time =
+            <choose>
+                <when test="createTime != null">
+                    #{createTime}
+                </when>
+                <otherwise>
+                    NOW()
+                </otherwise>
+            </choose>,
+            update_time = NOW(),
         </trim>
-        ) VALUES (
-        <trim suffixOverrides=",">
-            #{id},
-            <if test="seqNo != null">#{seqNo},</if>
-            <if test="applicationNo != null">#{applicationNo},</if>
-            <if test="patentName != null">#{patentName},</if>
-            <if test="applicant != null">#{applicant},</if>
-            <if test="inventor != null">#{inventor},</if>
-            <if test="sponsor != null">#{sponsor},</if>
-            <if test="agent != null">#{agent},</if>
-            <if test="applicationDate != null">#{applicationDate},</if>
-            <if test="notification != null">#{notification},</if>
-            <if test="issueDate != null">#{issueDate},</if>
-            <if test="feeReduction != null">#{feeReduction},</if>
-            <if test="remark != null">#{remark},</if>
-            #{createTime},
-            #{updateTime},
-        </trim>
-        )
         ON DUPLICATE KEY UPDATE
         <trim suffixOverrides=",">
             id = VALUES(id),
@@ -127,7 +153,7 @@
             fee_reduction = VALUES(fee_reduction),
             remark = VALUES(remark),
             create_time = VALUES(create_time),
-            update_time = VALUES(update_time),
+            update_time = NOW(),
         </trim>
     </insert>
 
@@ -178,8 +204,7 @@
             <if test="remark != null">
                 remark = #{remark},
             </if>
-            create_time = #{createTime},
-            update_time = #{updateTime},
+            update_time = NOW(),
         </trim>
         WHERE id = #{id}
     </update>
