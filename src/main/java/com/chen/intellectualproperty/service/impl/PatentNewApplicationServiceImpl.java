@@ -1,5 +1,6 @@
 package com.chen.intellectualproperty.service.impl;
 
+import com.chen.intellectualproperty.service.GenerateNoService;
 import com.chen.intellectualproperty.service.PatentNewApplicationService;
 import com.chen.intellectualproperty.mapper.PatentNewApplicationMapper;
 import com.chen.intellectualproperty.entity.PatentNewApplication;
@@ -22,11 +23,15 @@ public class PatentNewApplicationServiceImpl implements PatentNewApplicationServ
     @Autowired
     private PatentNewApplicationMapper patentNewApplicationMapper;
 
+    // 注入编号生成工具Service
+    @Autowired
+    private GenerateNoService generateNoService;
+
     @Override
     public int insert(PatentNewApplication record) {
-//        LocalDate now = LocalDate.now();
-//        String internalNo = "P" + now.getYear() +
-//        record.setInternalNo();
+        // 自动生成内部编号，覆盖前端传入值
+        String internalNo = generateNoService.generateNo("patent_new_application", "P");
+        record.setInternalNo(internalNo);
         return patentNewApplicationMapper.insert(record);
     }
 
