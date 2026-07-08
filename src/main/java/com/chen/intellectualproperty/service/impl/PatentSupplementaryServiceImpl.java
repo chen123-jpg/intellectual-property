@@ -8,13 +8,15 @@ import com.chen.intellectualproperty.query.PatentSupplementaryQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 
 /**
  * 补漏专利表 ServiceImpl
  *
- * @author 
+ * @author
  */
 @Service
 public class PatentSupplementaryServiceImpl implements PatentSupplementaryService {
@@ -23,21 +25,25 @@ public class PatentSupplementaryServiceImpl implements PatentSupplementaryServic
     private PatentSupplementaryMapper patentSupplementaryMapper;
 
     @Override
+    @Transactional
     public int insert(PatentSupplementary record) {
         return patentSupplementaryMapper.insert(record);
     }
 
     @Override
+    @Transactional
     public int insertOrUpdate(PatentSupplementary record) {
         return patentSupplementaryMapper.insertOrUpdate(record);
     }
 
     @Override
+    @Transactional
     public int deleteById(Long id) {
         return patentSupplementaryMapper.deleteById(id);
     }
 
     @Override
+    @Transactional
     public int updateById(PatentSupplementary record) {
         return patentSupplementaryMapper.updateById(record);
     }

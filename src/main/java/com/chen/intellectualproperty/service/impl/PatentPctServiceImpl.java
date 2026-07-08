@@ -8,13 +8,15 @@ import com.chen.intellectualproperty.query.PatentPctQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 
 /**
  * PCT国际申请表 ServiceImpl
  *
- * @author 
+ * @author
  */
 @Service
 public class PatentPctServiceImpl implements PatentPctService {
@@ -23,21 +25,25 @@ public class PatentPctServiceImpl implements PatentPctService {
     private PatentPctMapper patentPctMapper;
 
     @Override
+    @Transactional
     public int insert(PatentPct record) {
         return patentPctMapper.insert(record);
     }
 
     @Override
+    @Transactional
     public int insertOrUpdate(PatentPct record) {
         return patentPctMapper.insertOrUpdate(record);
     }
 
     @Override
+    @Transactional
     public int deleteById(Long id) {
         return patentPctMapper.deleteById(id);
     }
 
     @Override
+    @Transactional
     public int updateById(PatentPct record) {
         return patentPctMapper.updateById(record);
     }

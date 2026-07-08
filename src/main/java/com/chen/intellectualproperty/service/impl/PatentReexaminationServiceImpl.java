@@ -8,13 +8,15 @@ import com.chen.intellectualproperty.query.PatentReexaminationQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 
 /**
  * 复审无效专利表 ServiceImpl
  *
- * @author 
+ * @author
  */
 @Service
 public class PatentReexaminationServiceImpl implements PatentReexaminationService {
@@ -23,21 +25,25 @@ public class PatentReexaminationServiceImpl implements PatentReexaminationServic
     private PatentReexaminationMapper patentReexaminationMapper;
 
     @Override
+    @Transactional
     public int insert(PatentReexamination record) {
         return patentReexaminationMapper.insert(record);
     }
 
     @Override
+    @Transactional
     public int insertOrUpdate(PatentReexamination record) {
         return patentReexaminationMapper.insertOrUpdate(record);
     }
 
     @Override
+    @Transactional
     public int deleteById(Long id) {
         return patentReexaminationMapper.deleteById(id);
     }
 
     @Override
+    @Transactional
     public int updateById(PatentReexamination record) {
         return patentReexaminationMapper.updateById(record);
     }

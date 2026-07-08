@@ -8,6 +8,8 @@ import com.chen.intellectualproperty.query.PatentIntermediateChangeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.Map;
 /**
  * 中间著变专利表（有重复） ServiceImpl
  *
- * @author 
+ * @author
  */
 @Service
 public class PatentIntermediateChangeServiceImpl implements PatentIntermediateChangeService {
@@ -25,20 +27,24 @@ public class PatentIntermediateChangeServiceImpl implements PatentIntermediateCh
     private PatentIntermediateChangeMapper patentIntermediateChangeMapper;
 
     @Override
+    @Transactional
     public int insert(PatentIntermediateChange record) {return patentIntermediateChangeMapper.insert(record);
     }
 
     @Override
+    @Transactional
     public int insertOrUpdate(PatentIntermediateChange record) {
         return patentIntermediateChangeMapper.insertOrUpdate(record);
     }
 
     @Override
+    @Transactional
     public int deleteById(Long id) {
         return patentIntermediateChangeMapper.deleteById(id);
     }
 
     @Override
+    @Transactional
     public int updateById(PatentIntermediateChange record) {
         return patentIntermediateChangeMapper.updateById(record);
     }

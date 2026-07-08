@@ -1,15 +1,20 @@
 server:
   port: 8080
   address: 0.0.0.0
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 
 spring:
   application:
     name: intellectual-property
 
   datasource:
-    url: "jdbc:mysql://localhost:2006/intellectual-property?useSSL=false&serverTimezone=UTC&characterEncoding=utf8"
-    username: chen
-    password: Cc20060706.
+    url: "jdbc:mysql://47.109.39.226:3306/intellectual-property?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8"
+    username: root
+    password: 060803
     driver-class-name: com.mysql.cj.jdbc.Driver
   api-docs:
     enabled: true
@@ -22,3 +27,8 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
+
+logging:
+  level:
+    org.springframework.transaction: DEBUG
+    org.springframework.jdbc.datasource: DEBUG

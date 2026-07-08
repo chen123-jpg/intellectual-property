@@ -9,13 +9,15 @@ import com.chen.intellectualproperty.query.PatentNewApplicationQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 
 /**
  * 专利新申请表 ServiceImpl
  *
- * @author 
+ * @author
  */
 @Service
 public class PatentNewApplicationServiceImpl implements PatentNewApplicationService {
@@ -28,6 +30,7 @@ public class PatentNewApplicationServiceImpl implements PatentNewApplicationServ
     private GenerateNoService generateNoService;
 
     @Override
+    @Transactional
     public int insert(PatentNewApplication record) {
         // 自动生成内部编号，覆盖前端传入值
         String internalNo = generateNoService.generateNo("patent_new_application", "P");
@@ -36,16 +39,19 @@ public class PatentNewApplicationServiceImpl implements PatentNewApplicationServ
     }
 
     @Override
+    @Transactional
     public int insertOrUpdate(PatentNewApplication record) {
         return patentNewApplicationMapper.insertOrUpdate(record);
     }
 
     @Override
+    @Transactional
     public int deleteById(Long id) {
         return patentNewApplicationMapper.deleteById(id);
     }
 
     @Override
+    @Transactional
     public int updateById(PatentNewApplication record) {
         return patentNewApplicationMapper.updateById(record);
     }
