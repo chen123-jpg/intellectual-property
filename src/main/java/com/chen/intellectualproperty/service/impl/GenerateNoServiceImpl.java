@@ -19,7 +19,12 @@ public class GenerateNoServiceImpl implements GenerateNoService {
     // 流水号位数
     private static final int SERIAL_LENGTH = 3;
     // 表名白名单，防止SQL注入
-    private static final List<String> TABLE_WHITE_LIST = Arrays.asList("patent_new_application");
+    private static final List<String> TABLE_WHITE_LIST = Arrays.asList(
+            "patent_new_application"
+            ,"patent_intermediate_changes"
+            ,"patent_pcts"
+            ,"patent_supplementaries"
+            , "patent_reexaminations");
     // 最大重试次数（并发冲突重试）
     private static final int RETRY_COUNT = 3;
 
