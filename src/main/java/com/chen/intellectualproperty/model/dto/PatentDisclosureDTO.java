@@ -1,16 +1,16 @@
-package com.chen.intellectualproperty.vo;
+package com.chen.intellectualproperty.model.dto;
 
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
 /**
- * 专利交底信息表（T表） 视图对象
+ * 专利交底信息表（T表） DTO
  *
  * @author 
  */
 @Data
-public class PatentDisclosureVO {
+public class PatentDisclosureDTO {
 
     /**
      * 主键ID

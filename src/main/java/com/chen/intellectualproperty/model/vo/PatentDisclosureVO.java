@@ -1,16 +1,16 @@
-package com.chen.intellectualproperty.query;
+package com.chen.intellectualproperty.model.vo;
 
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
 /**
- * 专利交底信息表（T表） 查询对象
+ * 专利交底信息表（T表） 视图对象
  *
  * @author 
  */
 @Data
-public class PatentDisclosureQuery {
+public class PatentDisclosureVO {
 
     /**
      * 主键ID
@@ -99,10 +99,5 @@ public class PatentDisclosureQuery {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateTime;
-
-    /**
-     * 排序参数（例如："create_time DESC"、"name ASC, age DESC"）
-     */
-    private String orderBy;
 
 }

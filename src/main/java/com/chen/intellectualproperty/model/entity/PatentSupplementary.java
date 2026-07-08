@@ -1,93 +1,59 @@
-package com.chen.intellectualproperty.dto;
+package com.chen.intellectualproperty.model.entity;
 
+import com.chen.intellectualproperty.annotation.ExcelField;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
 /**
- * 补漏专利表 DTO
- *
- * @author 
+ * 补漏专利表
  */
 @Data
-public class PatentSupplementaryDTO {
+public class PatentSupplementary {
 
-    /**
-     * 主键ID
-     */
     private Long id;
 
-    /**
-     * 序号
-     */
+    @ExcelField(value = "序号", order = 1)
     private Integer seqNo;
 
-    /**
-     * 申请号/专利号
-     */
+    @ExcelField(value = "申请号/专利号", order = 2)
     private String applicationNo;
 
-    /**
-     * 发明创造名称
-     */
+    @ExcelField(value = "发明创造名称", order = 3)
     private String patentName;
 
-    /**
-     * 申请人
-     */
+    @ExcelField(value = "申请人", order = 4)
     private String applicant;
 
-    /**
-     * 发明人
-     */
+    @ExcelField(value = "发明人", order = 5)
     private String inventor;
 
-    /**
-     * 主办人
-     */
+    @ExcelField(value = "主办人", order = 6)
     private String sponsor;
 
-    /**
-     * 委托书代理人
-     */
+    @ExcelField(value = "委托书代理人", order = 7)
     private String agent;
 
-    /**
-     * 申请日
-     */
+    @ExcelField(value = "申请日", order = 8, dateFormat = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date applicationDate;
 
-    /**
-     * 通知书（状态下子列）
-     */
+    @ExcelField(value = "通知书", order = 9)
     private String notification;
 
-    /**
-     * 发文日（状态下子列）
-     */
+    @ExcelField(value = "发文日", order = 10, dateFormat = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date issueDate;
 
-    /**
-     * 费减（状态下子列）
-     */
+    @ExcelField(value = "费减", order = 11)
     private String feeReduction;
 
-    /**
-     * 备注
-     */
+    @ExcelField(value = "备注", order = 12)
     private String remark;
 
-    /**
-     * 创建时间
-     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
-    /**
-     * 更新时间
-     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateTime;
 

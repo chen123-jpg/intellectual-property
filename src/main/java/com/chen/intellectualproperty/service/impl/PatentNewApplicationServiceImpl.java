@@ -3,9 +3,8 @@ package com.chen.intellectualproperty.service.impl;
 import com.chen.intellectualproperty.service.GenerateNoService;
 import com.chen.intellectualproperty.service.PatentNewApplicationService;
 import com.chen.intellectualproperty.mapper.PatentNewApplicationMapper;
-import com.chen.intellectualproperty.entity.PatentNewApplication;
-import com.chen.intellectualproperty.dto.PatentNewApplicationDTO;
-import com.chen.intellectualproperty.query.PatentNewApplicationQuery;
+import com.chen.intellectualproperty.model.entity.PatentNewApplication;
+import com.chen.intellectualproperty.model.query.PatentNewApplicationQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

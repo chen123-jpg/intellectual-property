@@ -1,16 +1,16 @@
-package com.chen.intellectualproperty.vo;
+package com.chen.intellectualproperty.model.vo;
 
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
 /**
- * 专利新申请表 视图对象
+ * 补漏专利表 视图对象
  *
  * @author 
  */
 @Data
-public class PatentNewApplicationVO {
+public class PatentSupplementaryVO {
 
     /**
      * 主键ID
@@ -18,19 +18,19 @@ public class PatentNewApplicationVO {
     private Long id;
 
     /**
-     * 内部编号
+     * 序号
      */
-    private String internalNo;
-
-    /**
-     * 发明创造名称
-     */
-    private String patentName;
+    private Integer seqNo;
 
     /**
      * 申请号/专利号
      */
     private String applicationNo;
+
+    /**
+     * 发明创造名称
+     */
+    private String patentName;
 
     /**
      * 申请人
@@ -59,51 +59,25 @@ public class PatentNewApplicationVO {
     private Date applicationDate;
 
     /**
-     * 通知书（状态子列）
+     * 通知书（状态下子列）
      */
     private String notification;
 
     /**
-     * 发文日（状态子列）
+     * 发文日（状态下子列）
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date issueDate;
 
     /**
-     * 非正标-预审标（状态子列）
+     * 费减（状态下子列）
      */
-    private String preExamMark;
+    private String feeReduction;
 
     /**
-     * 缴费止期（费用子列）
+     * 备注
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date paymentDeadline;
-
-    /**
-     * 费用金额（费用子列）
-     */
-    private Double feeAmount;
-
-    /**
-     * 缴费时间（费用子列）
-     */
-    private String paymentDate;
-
-    /**
-     * 序号
-     */
-    private Integer seqNo;
-
-    /**
-     * 类型（发明/实用新型/外观设计）
-     */
-    private String patentType;
-
-    /**
-     * DAS码
-     */
-    private String dasCode;
+    private String remark;
 
     /**
      * 创建时间

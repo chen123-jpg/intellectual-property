@@ -1,8 +1,7 @@
 package com.chen.intellectualproperty.service;
 
-import com.chen.intellectualproperty.entity.PatentNewApplication;
-import com.chen.intellectualproperty.dto.PatentNewApplicationDTO;
-import com.chen.intellectualproperty.query.PatentNewApplicationQuery;
+import com.chen.intellectualproperty.model.entity.PatentNewApplication;
+import com.chen.intellectualproperty.model.query.PatentNewApplicationQuery;
 
 import java.util.List;
 import java.util.Map;

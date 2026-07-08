@@ -1,9 +1,8 @@
 package com.chen.intellectualproperty.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import com.chen.intellectualproperty.entity.PatentDisclosure;
-import com.chen.intellectualproperty.query.PatentDisclosureQuery;
+import com.chen.intellectualproperty.model.entity.PatentDisclosure;
+import com.chen.intellectualproperty.model.query.PatentDisclosureQuery;
 
 /**
  * 专利交底信息表（T表） Mapper

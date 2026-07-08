@@ -1,16 +1,16 @@
-package com.chen.intellectualproperty.query;
+package com.chen.intellectualproperty.model.vo;
 
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
 /**
- * 复审无效专利表 查询对象
+ * 复审无效专利表 视图对象
  *
  * @author 
  */
 @Data
-public class PatentReexaminationQuery {
+public class PatentReexaminationVO {
 
     /**
      * 主键ID
@@ -115,10 +115,5 @@ public class PatentReexaminationQuery {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateTime;
-
-    /**
-     * 排序参数（例如："create_time DESC"、"name ASC, age DESC"）
-     */
-    private String orderBy;
 
 }

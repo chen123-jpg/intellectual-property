@@ -1,6 +1,6 @@
 package com.chen.intellectualproperty.controller;
 
-import com.chen.intellectualproperty.vo.Result;
+import com.chen.intellectualproperty.model.Result;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

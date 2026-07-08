@@ -1,4 +1,4 @@
-package com.chen.intellectualproperty.entity;
+package com.chen.intellectualproperty.model.entity;
 
 import com.chen.intellectualproperty.annotation.ExcelField;
 import lombok.Data;

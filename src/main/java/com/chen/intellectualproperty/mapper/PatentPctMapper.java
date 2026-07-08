@@ -1,9 +1,8 @@
 package com.chen.intellectualproperty.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import com.chen.intellectualproperty.entity.PatentPct;
-import com.chen.intellectualproperty.query.PatentPctQuery;
+import com.chen.intellectualproperty.model.entity.PatentPct;
+import com.chen.intellectualproperty.model.query.PatentPctQuery;
 
 /**
  * PCT国际申请表 Mapper

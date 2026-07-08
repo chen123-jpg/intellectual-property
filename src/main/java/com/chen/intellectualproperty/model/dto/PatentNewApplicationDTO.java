@@ -1,4 +1,4 @@
-package com.chen.intellectualproperty.dto;
+package com.chen.intellectualproperty.model.dto;
 
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
