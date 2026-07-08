@@ -32,9 +32,11 @@ public class PatentNewApplicationServiceImpl implements PatentNewApplicationServ
     @Override
     @Transactional
     public int insert(PatentNewApplication record) {
-        // 自动生成内部编号，覆盖前端传入值
-        String internalNo = generateNoService.generateNo("patent_new_application", "P");
-        record.setInternalNo(internalNo);
+        if(record.getInternalNo().isEmpty()){
+            // 自动生成内部编号，覆盖前端传入值
+            String internalNo = generateNoService.generateNo("patent_new_application","internal_no", "P");
+            record.setInternalNo(internalNo);
+        }
         return patentNewApplicationMapper.insert(record);
     }
 
