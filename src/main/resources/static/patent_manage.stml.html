@@ -386,7 +386,15 @@
                         <button class="btn danger sm" @click="deleteRecord(row)">删除</button>
                     </td>
                     <td v-for="field in currentFields" :key="field.key">
-                        {{ formatValue(row[field.key], field.type) }}
+                        <template v-if="field.type === 'file'">
+                            <a v-if="row[field.key]"
+                               :href="getFileUrl(row[field.key])" target="_blank"
+                               style="text-decoration:none;color:#1a5c9e;border:1px solid #1a5c9e;padding:2px 8px;font-size:12px;">{{ getFileName(row[field.key]) }}</a>
+                            <span v-else style="color:#aaa;">-</span>
+                        </template>
+                        <template v-else>
+                            {{ formatValue(row[field.key], field.type) }}
+                        </template>
                     </td>
                 </tr>
                 </tbody>
@@ -408,17 +416,31 @@
                         class="form-group"
                 >
                     <label class="form-label">{{ field.label }}</label>
+
+                    <template v-if="field.type === 'file'">
+                        <input
+                                type="file"
+                                accept=".xml"
+                                class="form-input"
+                                @change="onFileChange(field.key, $event)"
+                        />
+                        <div v-if="editForm[field.key]" style="margin-top:6px;font-size:13px;color:#555;">
+                            当前文件: {{ getFileName(editForm[field.key]) }}
+                            <a :href="getFileUrl(editForm[field.key])" target="_blank"
+                               style="margin-left:8px;text-decoration:none;display:inline-block;padding:2px 10px;font-size:12px;border:1px solid #1a5c9e;color:#1a5c9e;">下载</a>
+                        </div>
+                    </template>
                     <input
-                            v-if="field.type !== 'date'"
+                            v-else-if="field.type === 'date'"
                             class="form-input"
+                            type="date"
                             v-model="editForm[field.key]"
-                            :placeholder="field.label"
                     />
                     <input
                             v-else
                             class="form-input"
-                            type="date"
                             v-model="editForm[field.key]"
+                            :placeholder="field.label"
                     />
                 </div>
             </div>
@@ -451,11 +473,11 @@
 
     // 字段配置
     const SHEET_CONFIGS = {
-        '专利新申请': { fields: [ { key: 'seqNo', label: '序号' }, { key: 'internalNo', label: '内部编号' }, { key: 'patentName', label: '发明创造名称' }, { key: 'applicationNo', label: '申请号/专利号' }, { key: 'patentType', label: '类型' }, { key: 'applicant', label: '申请人' }, { key: 'inventor', label: '发明人' }, { key: 'sponsor', label: '主办人' }, { key: 'agent', label: '委托书代理人' }, { key: 'applicationDate', label: '申请日', type: 'date' }, { key: 'notification', label: '通知书' }, { key: 'issueDate', label: '发文日', type: 'date' }, { key: 'preExamMark', label: '非正标-预审标' }, { key: 'paymentDeadline', label: '缴费止期', type: 'date' }, { key: 'feeAmount', label: '费用金额' }, { key: 'paymentDate', label: '缴费时间' }, { key: 'dasCode', label: 'DAS码' } ] },
-        '补漏专利': { fields: [ { key: 'seqNo', label: '序号' }, { key: 'applicationNo', label: '申请号/专利号' }, { key: 'patentName', label: '发明创造名称' }, { key: 'applicant', label: '申请人' }, { key: 'inventor', label: '发明人' }, { key: 'sponsor', label: '主办人' }, { key: 'agent', label: '委托书代理人' }, { key: 'applicationDate', label: '申请日', type: 'date' }, { key: 'notification', label: '通知书' }, { key: 'issueDate', label: '发文日', type: 'date' }, { key: 'feeReduction', label: '费减' }, { key: 'remark', label: '备注' } ] },
+        '专利新申请': { fields: [ { key: 'seqNo', label: '序号' }, { key: 'internalNo', label: '内部编号' }, { key: 'patentName', label: '发明创造名称' }, { key: 'applicationNo', label: '申请号/专利号' }, { key: 'patentType', label: '类型' }, { key: 'applicant', label: '申请人' }, { key: 'inventor', label: '发明人' }, { key: 'sponsor', label: '主办人' }, { key: 'agent', label: '委托书代理人' }, { key: 'applicationDate', label: '申请日', type: 'date' }, { key: 'notification', label: '通知书', type: 'file' }, { key: 'issueDate', label: '发文日', type: 'date' }, { key: 'preExamMark', label: '非正标-预审标' }, { key: 'paymentDeadline', label: '缴费止期', type: 'date' }, { key: 'feeAmount', label: '费用金额' }, { key: 'paymentDate', label: '缴费时间' }, { key: 'dasCode', label: 'DAS码' } ] },
+        '补漏专利': { fields: [ { key: 'seqNo', label: '序号' }, { key: 'applicationNo', label: '申请号/专利号' }, { key: 'patentName', label: '发明创造名称' }, { key: 'applicant', label: '申请人' }, { key: 'inventor', label: '发明人' }, { key: 'sponsor', label: '主办人' }, { key: 'agent', label: '委托书代理人' }, { key: 'applicationDate', label: '申请日', type: 'date' }, { key: 'notification', label: '通知书', type: 'file' }, { key: 'issueDate', label: '发文日', type: 'date' }, { key: 'feeReduction', label: '费减' }, { key: 'remark', label: '备注' } ] },
         '中间著变专利': { fields: [ { key: 'seqNo', label: '序号' }, { key: 'internalNo', label: '内部编号' }, { key: 'businessType', label: '业务类型' }, { key: 'applicationNo', label: '申请号' }, { key: 'patentName', label: '发明创造名称' }, { key: 'applicant', label: '申请人' }, { key: 'inventor', label: '发明人' }, { key: 'sponsor', label: '主办人' }, { key: 'agent', label: '委托书代理人' }, { key: 'applicationDate', label: '申请日', type: 'date' }, { key: 'status', label: '状态' }, { key: 'issueDate', label: '发文日', type: 'date' }, { key: 'feeReductionInfo', label: '非正标-费减情况' }, { key: 'submitDate', label: '提交日期', type: 'date' }, { key: 'paymentDeadline', label: '缴费止期', type: 'date' }, { key: 'feeAmount', label: '费用金额' }, { key: 'paymentStatus', label: '缴费状态' }, { key: 'remark1', label: '备注1' }, { key: 'remark2', label: '备注2' } ] },
         'PCT国际申请': { fields: [ { key: 'seqNo', label: '序号' }, { key: 'pctInternalNo', label: 'PCT内部编号' }, { key: 'status', label: '状态' }, { key: 'issueDate', label: '发文日', type: 'date' }, { key: 'priorInternalNo', label: '在先内部编号' }, { key: 'priorApplicationNo', label: '在先申请号' }, { key: 'priorApplicationDate', label: '在先申请日', type: 'date' }, { key: 'pctApplicationDate', label: 'PCT申请日', type: 'date' }, { key: 'applicationName', label: '申请名称' }, { key: 'applicationNo', label: '申请号' }, { key: 'applicant', label: '申请人' }, { key: 'inventor', label: '发明人' }, { key: 'sponsor', label: '主办人' }, { key: 'agent', label: '委托书代理人' }, { key: 'preliminaryConclusion', label: '初检结论' }, { key: 'remark', label: '备注' } ] },
-        '复审无效专利': { fields: [ { key: 'seqNo', label: '序号' }, { key: 'patentType', label: '类型' }, { key: 'category', label: '分类' }, { key: 'caseNo', label: '案件编号' }, { key: 'internalNo', label: '内部编号' }, { key: 'applicationNo', label: '申请号' }, { key: 'patentName', label: '专利名称' }, { key: 'applicant', label: '申请人' }, { key: 'sponsor', label: '主办人' }, { key: 'agent', label: '委托书代理人' }, { key: 'notification', label: '通知书' }, { key: 'issueDate', label: '发文日', type: 'date' }, { key: 'submitDate', label: '提交日期', type: 'date' }, { key: 'queryInfo', label: '25.6.12查询' }, { key: 'officialFee', label: '规费' }, { key: 'paymentDate', label: '缴费时间' }, { key: 'note1', label: '附注1' } ] }
+        '复审无效专利': { fields: [ { key: 'seqNo', label: '序号' }, { key: 'patentType', label: '类型' }, { key: 'category', label: '分类' }, { key: 'caseNo', label: '案件编号' }, { key: 'internalNo', label: '内部编号' }, { key: 'applicationNo', label: '申请号' }, { key: 'patentName', label: '专利名称' }, { key: 'applicant', label: '申请人' }, { key: 'sponsor', label: '主办人' }, { key: 'agent', label: '委托书代理人' }, { key: 'notification', label: '通知书', type: 'file' }, { key: 'issueDate', label: '发文日', type: 'date' }, { key: 'submitDate', label: '提交日期', type: 'date' }, { key: 'queryInfo', label: '25.6.12查询' }, { key: 'officialFee', label: '规费' }, { key: 'paymentDate', label: '缴费时间' }, { key: 'note1', label: '附注1' } ] }
     };
     const SHEET_NAMES = Object.keys(SHEET_CONFIGS);
 
@@ -470,6 +492,7 @@
             modalMode: 'add',
             editForm: {},
             editId: null,
+            selectedFiles: {},
             toastMessage: '',
             toastType: 'info',
             toastTimer: null
@@ -520,7 +543,7 @@
                 const url = `${API_BASE}/${resource}?page=1&page_size=100`;
                 try {
                     const result = await this.apiRequest(url, 'GET');
-                    if (result.code === 0) {
+                    if (result.code === 200) {
                         const list = result.data?.list || [];
                         this.$set(this.dataCache, sheetName, list);
                     } else {
@@ -544,6 +567,9 @@
                 if (type === 'date' && typeof value === 'string' && value.includes('T')) {
                     return value.split('T')[0];
                 }
+                if (type === 'file') {
+                    return this.getFileName(value);
+                }
                 return String(value);
             },
 
@@ -560,6 +586,34 @@
             async refreshData() {
                 await this.reloadCurrentSheet();
                 this.showToast('已刷新', 'success');
+            },
+
+            getFileUrl(filename) {
+                if (!filename) return '#';
+                return API_BASE + '/files/' + filename;
+            },
+
+            getFileName(filepath) {
+                if (!filepath) return '';
+                const idx = filepath.indexOf('_');
+                if (idx !== -1 && filepath.endsWith('.xml')) {
+                    return filepath.substring(idx + 1);
+                }
+                return filepath;
+            },
+
+            onFileChange(fieldKey, event) {
+                const file = event.target.files[0];
+                if (file) {
+                    if (!file.name.toLowerCase().endsWith('.xml')) {
+                        this.showToast('只允许上传 .xml 文件', 'warning');
+                        event.target.value = '';
+                        return;
+                    }
+                    this.$set(this.selectedFiles, fieldKey, file);
+                } else {
+                    this.$delete(this.selectedFiles, fieldKey);
+                }
             },
 
             openAddModal() {
@@ -586,18 +640,42 @@
                 this.modalVisible = false;
                 this.editForm = {};
                 this.editId = null;
+                this.selectedFiles = {};
             },
 
             async saveRecord() {
                 const resource = SHEET_TO_RESOURCE[this.currentSheet];
                 let url = `${API_BASE}/${resource}`;
                 const data = { ...this.editForm };
+
                 for (const f of this.currentFields) {
                     if (f.type === 'date' && data[f.key] === '') {
                         data[f.key] = null;
                     }
                 }
+
                 try {
+                    const notificationField = this.currentFields.find(f => f.key === 'notification');
+                    if (notificationField && this.selectedFiles['notification']) {
+                        const formData = new FormData();
+                        formData.append('file', this.selectedFiles['notification']);
+
+                        const uploadResponse = await axios({
+                            url: API_BASE + '/upload',
+                            method: 'POST',
+                            data: formData,
+                            headers: { 'Content-Type': 'multipart/form-data' }
+                        });
+
+                        if (uploadResponse.data.code === 200) {
+                            data.notification = uploadResponse.data.data.filename;
+                            this.$delete(this.selectedFiles, 'notification');
+                        } else {
+                            this.showToast('文件上传失败: ' + (uploadResponse.data.message || '未知错误'), 'error');
+                            return;
+                        }
+                    }
+
                     let result;
                     if (this.modalMode === 'add') {
                         result = await this.apiRequest(url, 'POST', data);
@@ -605,7 +683,7 @@
                         url = `${url}/${this.editId}`;
                         result = await this.apiRequest(url, 'PUT', data);
                     }
-                    if (result.code === 0) {
+                    if (result.code === 200) {
                         this.showToast(this.modalMode === 'add' ? '新增成功' : '更新成功', 'success');
                         this.closeModal();
                         await this.reloadCurrentSheet();
@@ -624,7 +702,7 @@
                 const url = `${API_BASE}/${resource}/${row.id}`;
                 this.apiRequest(url, 'DELETE')
                     .then(async (result) => {
-                        if (result.code === 0) {
+                        if (result.code === 200) {
                             this.showToast('已删除', 'success');
                             await this.reloadCurrentSheet();
                         } else {
