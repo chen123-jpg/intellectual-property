@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mysql *)",
+      "Bash(curl -s http://localhost:8080/patent-intermediate-changes?page=1\\\\&page_size=10)",
+      "Bash(curl -s http://localhost:8080/patent-pcts?page=1\\\\&page_size=10)",
+      "Bash(curl -s http://localhost:8080/patent-reexaminations?page=1\\\\&page_size=10)",
+      "Bash(curl -s http://localhost:8080/patent-supplementaries?page=1\\\\&page_size=10)",
+      "Bash(curl -s http://localhost:8080/files/20260708-170218_test_notification.xml)",
+      "Bash(echo \"not xml\")",
+      "Bash(curl -s -X POST -F \"file=@/tmp/test.txt\" http://localhost:8080/upload)",
+      "Bash(curl -s http://localhost:8080/patent_manage.stml.html)",
+      "Bash(curl *)",
+      "Bash(taskkill //PID 6584 //F)",
+      "Bash(mvn compile *)",
+      "Bash(npm run *)"
+    ]
+  }
+}

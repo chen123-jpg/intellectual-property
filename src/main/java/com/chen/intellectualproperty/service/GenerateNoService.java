@@ -1,6 +1,7 @@
 package com.chen.intellectualproperty.service;
 
-public interface GenerateNoService {
+public interface
+GenerateNoService {
     /**
      * 生成业务编号
      * @param tableName 数据库表名
