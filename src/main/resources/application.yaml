@@ -1,18 +1,13 @@
 server:
   port: 8080
   address: 0.0.0.0
-  servlet:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
 
 spring:
   application:
     name: intellectual-property
 
   datasource:
-    url: "jdbc:mysql://47.109.39.226:3306/intellectual-property?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8"
+    url: "jdbc:mysql://47.109.39.226:3306/intellectual-property?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&charset=utf8mb4"
     username: root
     password: 060803
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -21,6 +16,11 @@ spring:
     path: /v3/api-docs
     swagger-ui:
       enabled: true
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
