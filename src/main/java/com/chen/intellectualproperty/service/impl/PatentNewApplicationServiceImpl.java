@@ -24,6 +24,9 @@ public class PatentNewApplicationServiceImpl implements PatentNewApplicationServ
 
     @Override
     public int insert(PatentNewApplication record) {
+//        LocalDate now = LocalDate.now();
+//        String internalNo = "P" + now.getYear() +
+//        record.setInternalNo();
         return patentNewApplicationMapper.insert(record);
     }
 
