@@ -8,5 +8,5 @@ GenerateNoService {
      * @param prefix 编号前缀 P/PTS
      * @return 完整编号 P2026001
      */
-    String generateNo(String tableName, String prefix);
+    String generateNo(String tableName, String key, String prefix);
 }

@@ -3,12 +3,12 @@
 <!-- 
     表名: patent_supplementary
     表注释: 补漏专利表
-    生成时间: Tue Jul 07 14:49:18 CST 2026
+    生成时间: Thu Jul 09 15:42:06 CST 2026
 -->
 <mapper namespace="com.chen.intellectualproperty.mapper.PatentSupplementaryMapper">
 
     <!-- 结果映射 -->
-    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.entity.PatentSupplementary">
+    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.model.entity.PatentSupplementary">
         <id column="id" jdbcType="BIGINT" property="id" /> <!-- 主键ID -->
         <result column="seq_no" jdbcType="INTEGER" property="seqNo" /> <!-- 序号 -->
         <result column="application_no" jdbcType="VARCHAR" property="applicationNo" /> <!-- 申请号/专利号 -->
@@ -32,7 +32,7 @@
     </sql>
 
     <!-- 插入记录 -->
-    <insert id="insert" parameterType="com.chen.intellectualproperty.entity.PatentSupplementary">
+    <insert id="insert" parameterType="com.chen.intellectualproperty.model.entity.PatentSupplementary">
         INSERT INTO patent_supplementary
         <trim prefix="SET" suffixOverrides=",">
             id = #{id},
@@ -72,21 +72,13 @@
             <if test="remark != null">
                 remark = #{remark},
             </if>
-            create_time =
-            <choose>
-                <when test="createTime != null">
-                    #{createTime}
-                </when>
-                <otherwise>
-                    NOW()
-                </otherwise>
-            </choose>,
+            create_time = NOW(),
             update_time = NOW(),
         </trim>
     </insert>
 
     <!-- 插入或更新记录 -->
-    <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.entity.PatentSupplementary">
+    <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.model.entity.PatentSupplementary">
         INSERT INTO patent_supplementary
         <trim prefix="SET" suffixOverrides=",">
             id = #{id},
@@ -164,7 +156,7 @@
     </delete>
 
     <!-- 根据主键更新记录 -->
-    <update id="updateById" parameterType="com.chen.intellectualproperty.entity.PatentSupplementary">
+    <update id="updateById" parameterType="com.chen.intellectualproperty.model.entity.PatentSupplementary">
         UPDATE patent_supplementary
         SET
         <trim suffixOverrides=",">

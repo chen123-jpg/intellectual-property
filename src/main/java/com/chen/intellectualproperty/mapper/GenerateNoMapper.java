@@ -14,9 +14,10 @@ public interface GenerateNoMapper {
      * @param year 当前4位年份
      * @return 最大完整编号
      */
-    @Select("SELECT MAX(internal_no) FROM ${tableName} " +
-            "WHERE internal_no LIKE CONCAT(#{prefix}, #{year}, '%')")
+    @Select("SELECT MAX(${key}) FROM ${tableName} " +
+            "WHERE ${key} LIKE CONCAT(#{prefix}, #{year}, '%')")
     String getMaxBusinessNo(@Param("tableName") String tableName,
+                            @Param("key")String key,
                             @Param("prefix") String prefix,
                             @Param("year") String year);
 }

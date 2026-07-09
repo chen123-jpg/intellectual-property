@@ -1,9 +1,8 @@
 package com.chen.intellectualproperty.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import com.chen.intellectualproperty.entity.PatentIntermediateChange;
-import com.chen.intellectualproperty.query.PatentIntermediateChangeQuery;
+import com.chen.intellectualproperty.model.entity.PatentIntermediateChange;
+import com.chen.intellectualproperty.model.query.PatentIntermediateChangeQuery;
 
 /**
  * 中间著变专利表（有重复） Mapper

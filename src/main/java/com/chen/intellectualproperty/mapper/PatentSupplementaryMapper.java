@@ -1,9 +1,8 @@
 package com.chen.intellectualproperty.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import com.chen.intellectualproperty.entity.PatentSupplementary;
-import com.chen.intellectualproperty.query.PatentSupplementaryQuery;
+import com.chen.intellectualproperty.model.entity.PatentSupplementary;
+import com.chen.intellectualproperty.model.query.PatentSupplementaryQuery;
 
 /**
  * 补漏专利表 Mapper

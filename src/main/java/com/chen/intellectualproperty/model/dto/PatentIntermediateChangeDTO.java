@@ -1,16 +1,16 @@
-package com.chen.intellectualproperty.vo;
+package com.chen.intellectualproperty.model.dto;
 
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
 /**
- * 补漏专利表 视图对象
+ * 中间著变专利表（有重复） DTO
  *
  * @author 
  */
 @Data
-public class PatentSupplementaryVO {
+public class PatentIntermediateChangeDTO {
 
     /**
      * 主键ID
@@ -23,7 +23,17 @@ public class PatentSupplementaryVO {
     private Integer seqNo;
 
     /**
-     * 申请号/专利号
+     * 内部编号
+     */
+    private String internalNo;
+
+    /**
+     * 业务类型（转让/转我所/著录变更等）
+     */
+    private String businessType;
+
+    /**
+     * 申请号
      */
     private String applicationNo;
 
@@ -59,25 +69,52 @@ public class PatentSupplementaryVO {
     private Date applicationDate;
 
     /**
-     * 通知书（状态下子列）
+     * 状态
      */
-    private String notification;
+    private String status;
 
     /**
-     * 发文日（状态下子列）
+     * 发文日
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date issueDate;
 
     /**
-     * 费减（状态下子列）
+     * 非正标-费减情况
      */
-    private String feeReduction;
+    private String feeReductionInfo;
 
     /**
-     * 备注
+     * 提交日期
      */
-    private String remark;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date submitDate;
+
+    /**
+     * 缴费止期
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date paymentDeadline;
+
+    /**
+     * 费用金额
+     */
+    private Double feeAmount;
+
+    /**
+     * 缴费状态
+     */
+    private String paymentStatus;
+
+    /**
+     * 备注1
+     */
+    private String remark1;
+
+    /**
+     * 备注2
+     */
+    private String remark2;
 
     /**
      * 创建时间

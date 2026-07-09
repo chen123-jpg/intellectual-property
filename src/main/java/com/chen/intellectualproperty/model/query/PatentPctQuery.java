@@ -1,16 +1,16 @@
-package com.chen.intellectualproperty.dto;
+package com.chen.intellectualproperty.model.query;
 
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
 /**
- * PCT国际申请表 DTO
+ * PCT国际申请表 查询对象
  *
  * @author 
  */
 @Data
-public class PatentPctDTO {
+public class PatentPctQuery {
 
     /**
      * 主键ID
@@ -111,5 +111,10 @@ public class PatentPctDTO {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateTime;
+
+    /**
+     * 排序参数（例如："create_time DESC"、"name ASC, age DESC"）
+     */
+    private String orderBy;
 
 }

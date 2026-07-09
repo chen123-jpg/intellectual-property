@@ -3,12 +3,12 @@
 <!-- 
     表名: patent_intermediate_change
     表注释: 中间著变专利表（有重复）
-    生成时间: Tue Jul 07 14:49:18 CST 2026
+    生成时间: Thu Jul 09 15:42:06 CST 2026
 -->
 <mapper namespace="com.chen.intellectualproperty.mapper.PatentIntermediateChangeMapper">
 
     <!-- 结果映射 -->
-    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.entity.PatentIntermediateChange">
+    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.model.entity.PatentIntermediateChange">
         <id column="id" jdbcType="BIGINT" property="id" /> <!-- 主键ID -->
         <result column="seq_no" jdbcType="INTEGER" property="seqNo" /> <!-- 序号 -->
         <result column="internal_no" jdbcType="VARCHAR" property="internalNo" /> <!-- 内部编号 -->
@@ -39,7 +39,7 @@
     </sql>
 
     <!-- 插入记录 -->
-    <insert id="insert" parameterType="com.chen.intellectualproperty.entity.PatentIntermediateChange">
+    <insert id="insert" parameterType="com.chen.intellectualproperty.model.entity.PatentIntermediateChange">
         INSERT INTO patent_intermediate_change
         <trim prefix="SET" suffixOverrides=",">
             id = #{id},
@@ -100,21 +100,13 @@
             <if test="remark2 != null">
                 remark2 = #{remark2},
             </if>
-            create_time =
-            <choose>
-                <when test="createTime != null">
-                    #{createTime}
-                </when>
-                <otherwise>
-                    NOW()
-                </otherwise>
-            </choose>,
+            create_time = NOW(),
             update_time = NOW(),
         </trim>
     </insert>
 
     <!-- 插入或更新记录 -->
-    <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.entity.PatentIntermediateChange">
+    <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.model.entity.PatentIntermediateChange">
         INSERT INTO patent_intermediate_change
         <trim prefix="SET" suffixOverrides=",">
             id = #{id},
@@ -220,7 +212,7 @@
     </delete>
 
     <!-- 根据主键更新记录 -->
-    <update id="updateById" parameterType="com.chen.intellectualproperty.entity.PatentIntermediateChange">
+    <update id="updateById" parameterType="com.chen.intellectualproperty.model.entity.PatentIntermediateChange">
         UPDATE patent_intermediate_change
         SET
         <trim suffixOverrides=",">

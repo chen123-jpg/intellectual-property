@@ -1,16 +1,16 @@
-package com.chen.intellectualproperty.query;
+package com.chen.intellectualproperty.model.query;
 
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
 /**
- * 专利新申请表 查询对象
+ * 中间著变专利表（有重复） 查询对象
  *
  * @author 
  */
 @Data
-public class PatentNewApplicationQuery {
+public class PatentIntermediateChangeQuery {
 
     /**
      * 主键ID
@@ -18,19 +18,29 @@ public class PatentNewApplicationQuery {
     private Long id;
 
     /**
+     * 序号
+     */
+    private Integer seqNo;
+
+    /**
      * 内部编号
      */
     private String internalNo;
 
     /**
+     * 业务类型（转让/转我所/著录变更等）
+     */
+    private String businessType;
+
+    /**
+     * 申请号
+     */
+    private String applicationNo;
+
+    /**
      * 发明创造名称
      */
     private String patentName;
-
-    /**
-     * 申请号/专利号
-     */
-    private String applicationNo;
 
     /**
      * 申请人
@@ -59,51 +69,52 @@ public class PatentNewApplicationQuery {
     private Date applicationDate;
 
     /**
-     * 通知书（状态子列）
+     * 状态
      */
-    private String notification;
+    private String status;
 
     /**
-     * 发文日（状态子列）
+     * 发文日
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date issueDate;
 
     /**
-     * 非正标-预审标（状态子列）
+     * 非正标-费减情况
      */
-    private String preExamMark;
+    private String feeReductionInfo;
 
     /**
-     * 缴费止期（费用子列）
+     * 提交日期
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date submitDate;
+
+    /**
+     * 缴费止期
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date paymentDeadline;
 
     /**
-     * 费用金额（费用子列）
+     * 费用金额
      */
     private Double feeAmount;
 
     /**
-     * 缴费时间（费用子列）
+     * 缴费状态
      */
-    private String paymentDate;
+    private String paymentStatus;
 
     /**
-     * 序号
+     * 备注1
      */
-    private Integer seqNo;
+    private String remark1;
 
     /**
-     * 类型（发明/实用新型/外观设计）
+     * 备注2
      */
-    private String patentType;
-
-    /**
-     * DAS码
-     */
-    private String dasCode;
+    private String remark2;
 
     /**
      * 创建时间

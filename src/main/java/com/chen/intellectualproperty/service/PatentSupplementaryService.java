@@ -1,8 +1,7 @@
 package com.chen.intellectualproperty.service;
 
-import com.chen.intellectualproperty.entity.PatentSupplementary;
-import com.chen.intellectualproperty.dto.PatentSupplementaryDTO;
-import com.chen.intellectualproperty.query.PatentSupplementaryQuery;
+import com.chen.intellectualproperty.model.entity.PatentSupplementary;
+import com.chen.intellectualproperty.model.query.PatentSupplementaryQuery;
 
 import java.util.List;
 import java.util.Map;

@@ -1,9 +1,8 @@
 package com.chen.intellectualproperty.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import com.chen.intellectualproperty.entity.PatentReexamination;
-import com.chen.intellectualproperty.query.PatentReexaminationQuery;
+import com.chen.intellectualproperty.model.entity.PatentReexamination;
+import com.chen.intellectualproperty.model.query.PatentReexaminationQuery;
 
 /**
  * 复审无效专利表 Mapper
