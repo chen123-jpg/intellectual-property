@@ -24,7 +24,8 @@ public class GenerateNoServiceImpl implements GenerateNoService {
             ,"patent_intermediate_changes"
             ,"patent_pcts"
             ,"patent_supplementaries"
-            , "patent_reexaminations");
+            ,"patent_reexaminations"
+            ,"patent_disclosure");
     private static final List<String> KEY_WHITE_LIST = Arrays.asList(
             "temp_no"
             ,"internal_no"

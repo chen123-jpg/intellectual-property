@@ -29,6 +29,8 @@ public class PatentDisclosureServiceImpl implements PatentDisclosureService {
     public int insert(PatentDisclosure record) {
         String tempNo = generateNoService.generateNo("patent_disclosure","temp_no","T");
         String internalNo = generateNoService.generateNo("patent_disclosure","internal_no","P");
+        record.setTempNo(tempNo);
+        record.setInternalNo(internalNo);
         return patentDisclosureMapper.insert(record);
     }
 
