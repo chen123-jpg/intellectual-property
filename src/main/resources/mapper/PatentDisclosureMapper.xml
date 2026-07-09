@@ -3,7 +3,7 @@
 <!-- 
     表名: patent_disclosure
     表注释: 专利交底信息表（T表）
-    生成时间: Thu Jul 09 15:33:25 CST 2026
+    生成时间: Thu Jul 09 15:42:06 CST 2026
 -->
 <mapper namespace="com.chen.intellectualproperty.mapper.PatentDisclosureMapper">
 
@@ -34,7 +34,7 @@
     </sql>
 
     <!-- 插入记录 -->
-    <insert id="insert" parameterType="com.chen.intellectualproperty.entity.PatentDisclosure">
+    <insert id="insert" parameterType="com.chen.intellectualproperty.model.entity.PatentDisclosure">
         INSERT INTO patent_disclosure
         <trim prefix="SET" suffixOverrides=",">
             id = #{id},
@@ -86,7 +86,7 @@
     </insert>
 
     <!-- 插入或更新记录 -->
-    <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.entity.PatentDisclosure">
+    <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.model.entity.PatentDisclosure">
         INSERT INTO patent_disclosure
         <trim prefix="SET" suffixOverrides=",">
             id = #{id},
@@ -172,7 +172,7 @@
     </delete>
 
     <!-- 根据主键更新记录 -->
-    <update id="updateById" parameterType="com.chen.intellectualproperty.entity.PatentDisclosure">
+    <update id="updateById" parameterType="com.chen.intellectualproperty.model.entity.PatentDisclosure">
         UPDATE patent_disclosure
         SET
         <trim suffixOverrides=",">
