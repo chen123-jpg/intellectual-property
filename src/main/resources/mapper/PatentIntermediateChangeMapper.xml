@@ -8,7 +8,7 @@
 <mapper namespace="com.chen.intellectualproperty.mapper.PatentIntermediateChangeMapper">
 
     <!-- 结果映射 -->
-    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.entity.PatentIntermediateChange">
+    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.model.entity.PatentIntermediateChange">
         <id column="id" jdbcType="BIGINT" property="id" /> <!-- 主键ID -->
         <result column="seq_no" jdbcType="INTEGER" property="seqNo" /> <!-- 序号 -->
         <result column="internal_no" jdbcType="VARCHAR" property="internalNo" /> <!-- 内部编号 -->

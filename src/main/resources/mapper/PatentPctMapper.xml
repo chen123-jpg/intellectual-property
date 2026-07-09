@@ -8,7 +8,7 @@
 <mapper namespace="com.chen.intellectualproperty.mapper.PatentPctMapper">
 
     <!-- 结果映射 -->
-    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.entity.PatentPct">
+    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.model.entity.PatentPct">
         <id column="id" jdbcType="BIGINT" property="id" /> <!-- 主键ID -->
         <result column="seq_no" jdbcType="INTEGER" property="seqNo" /> <!-- 序号 -->
         <result column="pct_internal_no" jdbcType="VARCHAR" property="pctInternalNo" /> <!-- PCT内部编号 -->

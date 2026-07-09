@@ -8,7 +8,7 @@
 <mapper namespace="com.chen.intellectualproperty.mapper.PatentNewApplicationMapper">
 
     <!-- 结果映射 -->
-    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.entity.PatentNewApplication">
+    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.model.entity.PatentNewApplication">
         <id column="id" jdbcType="BIGINT" property="id" /> <!-- 主键ID -->
         <result column="internal_no" jdbcType="VARCHAR" property="internalNo" /> <!-- 内部编号 -->
         <result column="patent_name" jdbcType="VARCHAR" property="patentName" /> <!-- 发明创造名称 -->
