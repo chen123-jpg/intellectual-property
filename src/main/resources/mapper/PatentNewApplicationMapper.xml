@@ -3,12 +3,12 @@
 <!-- 
     表名: patent_new_application
     表注释: 专利新申请表
-    生成时间: Tue Jul 07 14:49:18 CST 2026
+    生成时间: Thu Jul 09 15:33:25 CST 2026
 -->
 <mapper namespace="com.chen.intellectualproperty.mapper.PatentNewApplicationMapper">
 
     <!-- 结果映射 -->
-    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.model.entity.PatentNewApplication">
+    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.entity.PatentNewApplication">
         <id column="id" jdbcType="BIGINT" property="id" /> <!-- 主键ID -->
         <result column="internal_no" jdbcType="VARCHAR" property="internalNo" /> <!-- 内部编号 -->
         <result column="patent_name" jdbcType="VARCHAR" property="patentName" /> <!-- 发明创造名称 -->
@@ -37,7 +37,7 @@
     </sql>
 
     <!-- 插入记录 -->
-    <insert id="insert" parameterType="com.chen.intellectualproperty.model.entity.PatentNewApplication">
+    <insert id="insert" parameterType="com.chen.intellectualproperty.entity.PatentNewApplication">
         INSERT INTO patent_new_application
         <trim prefix="SET" suffixOverrides=",">
             id = #{id},
@@ -92,21 +92,13 @@
             <if test="dasCode != null">
                 das_code = #{dasCode},
             </if>
-            create_time =
-            <choose>
-                <when test="createTime != null">
-                    #{createTime}
-                </when>
-                <otherwise>
-                    NOW()
-                </otherwise>
-            </choose>,
+            create_time = NOW(),
             update_time = NOW(),
         </trim>
     </insert>
 
     <!-- 插入或更新记录 -->
-    <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.model.entity.PatentNewApplication">
+    <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.entity.PatentNewApplication">
         INSERT INTO patent_new_application
         <trim prefix="SET" suffixOverrides=",">
             id = #{id},
@@ -204,7 +196,7 @@
     </delete>
 
     <!-- 根据主键更新记录 -->
-    <update id="updateById" parameterType="com.chen.intellectualproperty.model.entity.PatentNewApplication">
+    <update id="updateById" parameterType="com.chen.intellectualproperty.entity.PatentNewApplication">
         UPDATE patent_new_application
         SET
         <trim suffixOverrides=",">
