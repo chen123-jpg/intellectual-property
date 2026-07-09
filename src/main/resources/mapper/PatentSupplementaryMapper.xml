@@ -3,7 +3,7 @@
 <!-- 
     表名: patent_supplementary
     表注释: 补漏专利表
-    生成时间: Thu Jul 09 15:33:25 CST 2026
+    生成时间: Thu Jul 09 15:42:06 CST 2026
 -->
 <mapper namespace="com.chen.intellectualproperty.mapper.PatentSupplementaryMapper">
 
@@ -32,7 +32,7 @@
     </sql>
 
     <!-- 插入记录 -->
-    <insert id="insert" parameterType="com.chen.intellectualproperty.entity.PatentSupplementary">
+    <insert id="insert" parameterType="com.chen.intellectualproperty.model.entity.PatentSupplementary">
         INSERT INTO patent_supplementary
         <trim prefix="SET" suffixOverrides=",">
             id = #{id},
@@ -78,7 +78,7 @@
     </insert>
 
     <!-- 插入或更新记录 -->
-    <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.entity.PatentSupplementary">
+    <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.model.entity.PatentSupplementary">
         INSERT INTO patent_supplementary
         <trim prefix="SET" suffixOverrides=",">
             id = #{id},
@@ -156,7 +156,7 @@
     </delete>
 
     <!-- 根据主键更新记录 -->
-    <update id="updateById" parameterType="com.chen.intellectualproperty.entity.PatentSupplementary">
+    <update id="updateById" parameterType="com.chen.intellectualproperty.model.entity.PatentSupplementary">
         UPDATE patent_supplementary
         SET
         <trim suffixOverrides=",">
