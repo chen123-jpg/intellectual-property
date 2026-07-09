@@ -1,11 +1,10 @@
 package com.chen.intellectualproperty.controller;
 
 import com.chen.intellectualproperty.service.PatentSupplementaryService;
-import com.chen.intellectualproperty.entity.PatentSupplementary;
-import com.chen.intellectualproperty.dto.PatentSupplementaryDTO;
-import com.chen.intellectualproperty.query.PatentSupplementaryQuery;
+import com.chen.intellectualproperty.model.entity.PatentSupplementary;
+import com.chen.intellectualproperty.model.query.PatentSupplementaryQuery;
 import com.chen.intellectualproperty.util.ExcelExportUtil;
-import com.chen.intellectualproperty.vo.Result;
+import com.chen.intellectualproperty.model.dto.Result;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

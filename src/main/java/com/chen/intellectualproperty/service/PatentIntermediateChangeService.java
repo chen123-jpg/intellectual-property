@@ -1,8 +1,7 @@
 package com.chen.intellectualproperty.service;
 
-import com.chen.intellectualproperty.entity.PatentIntermediateChange;
-import com.chen.intellectualproperty.dto.PatentIntermediateChangeDTO;
-import com.chen.intellectualproperty.query.PatentIntermediateChangeQuery;
+import com.chen.intellectualproperty.model.entity.PatentIntermediateChange;
+import com.chen.intellectualproperty.model.query.PatentIntermediateChangeQuery;
 
 import java.util.List;
 import java.util.Map;

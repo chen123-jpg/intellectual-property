@@ -25,18 +25,25 @@ public class GenerateNoServiceImpl implements GenerateNoService {
             ,"patent_pcts"
             ,"patent_supplementaries"
             , "patent_reexaminations");
+    private static final List<String> KEY_WHITE_LIST = Arrays.asList(
+            "temp_no"
+            ,"internal_no"
+            ,"pct_internal_no");
     // 最大重试次数（并发冲突重试）
     private static final int RETRY_COUNT = 3;
 
     @Override
-    public String generateNo(String tableName, String prefix) {
+    public String generateNo(String tableName, String key, String prefix) {
         // 1. 参数校验
         if (prefix == null || prefix.trim().isEmpty()) {
             throw new RuntimeException("编号前缀不能为空");
         }
         String realPrefix = prefix.trim();
         if (!TABLE_WHITE_LIST.contains(tableName)) {
-            throw new RuntimeException("不允许操作数据表：" + tableName);
+            throw new RuntimeException("不允许操作数据表");
+        }
+        if (!KEY_WHITE_LIST.contains(key)) {
+            throw new RuntimeException("不允许操作");
         }
 
         String currentYear = String.valueOf(Year.now().getValue());
@@ -44,7 +51,7 @@ public class GenerateNoServiceImpl implements GenerateNoService {
 
         // 循环重试，防止并发重复编号
         for (int i = 0; i < RETRY_COUNT; i++) {
-            String maxNo = generateNoMapper.getMaxBusinessNo(tableName, realPrefix, currentYear);
+            String maxNo = generateNoMapper.getMaxBusinessNo(tableName, key, realPrefix, currentYear);
             int serialNum;
             if (maxNo == null) {
                 serialNum = 1;

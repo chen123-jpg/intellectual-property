@@ -2,9 +2,8 @@ package com.chen.intellectualproperty.service.impl;
 
 import com.chen.intellectualproperty.service.PatentPctService;
 import com.chen.intellectualproperty.mapper.PatentPctMapper;
-import com.chen.intellectualproperty.entity.PatentPct;
-import com.chen.intellectualproperty.dto.PatentPctDTO;
-import com.chen.intellectualproperty.query.PatentPctQuery;
+import com.chen.intellectualproperty.model.entity.PatentPct;
+import com.chen.intellectualproperty.model.query.PatentPctQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

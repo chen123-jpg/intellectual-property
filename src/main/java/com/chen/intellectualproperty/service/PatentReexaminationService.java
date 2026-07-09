@@ -1,8 +1,7 @@
 package com.chen.intellectualproperty.service;
 
-import com.chen.intellectualproperty.entity.PatentReexamination;
-import com.chen.intellectualproperty.dto.PatentReexaminationDTO;
-import com.chen.intellectualproperty.query.PatentReexaminationQuery;
+import com.chen.intellectualproperty.model.entity.PatentReexamination;
+import com.chen.intellectualproperty.model.query.PatentReexaminationQuery;
 
 import java.util.List;
 import java.util.Map;
