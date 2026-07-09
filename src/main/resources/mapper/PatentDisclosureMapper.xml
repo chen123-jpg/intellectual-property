@@ -8,7 +8,7 @@
 <mapper namespace="com.chen.intellectualproperty.mapper.PatentDisclosureMapper">
 
     <!-- 结果映射 -->
-    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.entity.PatentDisclosure">
+    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.model.entity.PatentDisclosure">
         <id column="id" jdbcType="BIGINT" property="id" /> <!-- 主键ID -->
         <result column="temp_no" jdbcType="VARCHAR" property="tempNo" /> <!-- 临时编号（如T250101） -->
         <result column="internal_no" jdbcType="VARCHAR" property="internalNo" /> <!-- 内部编号（与P表关联键） -->
