@@ -1,4 +1,4 @@
-package com.chen.intellectualproperty.model;
+package com.chen.intellectualproperty.model.dto;
 
 import lombok.Data;
 
