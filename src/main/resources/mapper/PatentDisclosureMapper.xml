@@ -8,7 +8,7 @@
 <mapper namespace="com.chen.intellectualproperty.mapper.PatentDisclosureMapper">
 
     <!-- 结果映射 -->
-    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.entity.PatentDisclosure">
+    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.model.entity.PatentDisclosure">
         <id column="id" jdbcType="BIGINT" property="id" /> <!-- 主键ID -->
         <result column="temp_no" jdbcType="VARCHAR" property="tempNo" /> <!-- 临时编号（如T250101） -->
         <result column="internal_no" jdbcType="VARCHAR" property="internalNo" /> <!-- 内部编号（与P表关联键） -->
@@ -34,7 +34,7 @@
     </sql>
 
     <!-- 插入记录 -->
-    <insert id="insert" parameterType="com.chen.intellectualproperty.entity.PatentDisclosure">
+    <insert id="insert" parameterType="com.chen.intellectualproperty.model.entity.PatentDisclosure">
         INSERT INTO patent_disclosure
         <trim prefix="SET" suffixOverrides=",">
             id = #{id},
@@ -94,7 +94,7 @@
     </insert>
 
     <!-- 插入或更新记录 -->
-    <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.entity.PatentDisclosure">
+    <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.model.entity.PatentDisclosure">
         INSERT INTO patent_disclosure
         <trim prefix="SET" suffixOverrides=",">
             id = #{id},
@@ -180,7 +180,7 @@
     </delete>
 
     <!-- 根据主键更新记录 -->
-    <update id="updateById" parameterType="com.chen.intellectualproperty.entity.PatentDisclosure">
+    <update id="updateById" parameterType="com.chen.intellectualproperty.model.entity.PatentDisclosure">
         UPDATE patent_disclosure
         SET
         <trim suffixOverrides=",">

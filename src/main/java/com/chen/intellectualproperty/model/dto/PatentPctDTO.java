@@ -1,16 +1,16 @@
-package com.chen.intellectualproperty.vo;
+package com.chen.intellectualproperty.model.dto;
 
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
 /**
- * PCT国际申请表 视图对象
+ * PCT国际申请表 DTO
  *
  * @author 
  */
 @Data
-public class PatentPctVO {
+public class PatentPctDTO {
 
     /**
      * 主键ID

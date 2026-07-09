@@ -2,9 +2,8 @@ package com.chen.intellectualproperty.service.impl;
 
 import com.chen.intellectualproperty.service.PatentReexaminationService;
 import com.chen.intellectualproperty.mapper.PatentReexaminationMapper;
-import com.chen.intellectualproperty.entity.PatentReexamination;
-import com.chen.intellectualproperty.dto.PatentReexaminationDTO;
-import com.chen.intellectualproperty.query.PatentReexaminationQuery;
+import com.chen.intellectualproperty.model.entity.PatentReexamination;
+import com.chen.intellectualproperty.model.query.PatentReexaminationQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -2,16 +2,13 @@ package com.chen.intellectualproperty.service.impl;
 
 import com.chen.intellectualproperty.service.PatentIntermediateChangeService;
 import com.chen.intellectualproperty.mapper.PatentIntermediateChangeMapper;
-import com.chen.intellectualproperty.entity.PatentIntermediateChange;
-import com.chen.intellectualproperty.dto.PatentIntermediateChangeDTO;
-import com.chen.intellectualproperty.query.PatentIntermediateChangeQuery;
+import com.chen.intellectualproperty.model.entity.PatentIntermediateChange;
+import com.chen.intellectualproperty.model.query.PatentIntermediateChangeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 

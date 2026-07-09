@@ -1,8 +1,7 @@
 package com.chen.intellectualproperty.service;
 
-import com.chen.intellectualproperty.entity.PatentDisclosure;
-import com.chen.intellectualproperty.dto.PatentDisclosureDTO;
-import com.chen.intellectualproperty.query.PatentDisclosureQuery;
+import com.chen.intellectualproperty.model.entity.PatentDisclosure;
+import com.chen.intellectualproperty.model.query.PatentDisclosureQuery;
 
 import java.util.List;
 import java.util.Map;

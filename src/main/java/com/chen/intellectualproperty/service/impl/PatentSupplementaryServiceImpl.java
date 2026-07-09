@@ -2,9 +2,8 @@ package com.chen.intellectualproperty.service.impl;
 
 import com.chen.intellectualproperty.service.PatentSupplementaryService;
 import com.chen.intellectualproperty.mapper.PatentSupplementaryMapper;
-import com.chen.intellectualproperty.entity.PatentSupplementary;
-import com.chen.intellectualproperty.dto.PatentSupplementaryDTO;
-import com.chen.intellectualproperty.query.PatentSupplementaryQuery;
+import com.chen.intellectualproperty.model.entity.PatentSupplementary;
+import com.chen.intellectualproperty.model.query.PatentSupplementaryQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -3,9 +3,8 @@ package com.chen.intellectualproperty.service.impl;
 import com.chen.intellectualproperty.service.GenerateNoService;
 import com.chen.intellectualproperty.service.PatentDisclosureService;
 import com.chen.intellectualproperty.mapper.PatentDisclosureMapper;
-import com.chen.intellectualproperty.entity.PatentDisclosure;
-import com.chen.intellectualproperty.dto.PatentDisclosureDTO;
-import com.chen.intellectualproperty.query.PatentDisclosureQuery;
+import com.chen.intellectualproperty.model.entity.PatentDisclosure;
+import com.chen.intellectualproperty.model.query.PatentDisclosureQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
