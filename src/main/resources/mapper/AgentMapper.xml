@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chen.intellectualproperty.mapper.AgentMapper">
+
+    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.model.entity.Agent">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, name, create_time, update_time
+    </sql>
+
+    <insert id="insert" parameterType="com.chen.intellectualproperty.model.entity.Agent" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO agent (name, create_time, update_time)
+        VALUES (#{name}, NOW(), NOW())
+    </insert>
+
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM agent WHERE id = #{id}
+    </delete>
+
+    <update id="updateById" parameterType="com.chen.intellectualproperty.model.entity.Agent">
+        UPDATE agent
+        SET name = #{name}, update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectById" parameterType="Long" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM agent WHERE id = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM agent ORDER BY id DESC
+    </select>
+
+    <select id="selectByName" parameterType="String" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM agent WHERE name = #{name}
+    </select>
+
+</mapper>
