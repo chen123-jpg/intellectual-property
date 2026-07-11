@@ -27,7 +27,24 @@ public class ExcelExportUtil {
      */
     public static <T> void exportToExcel(List<T> dataList, String sheetName, HttpServletResponse response)
             throws IOException {
-        Class<?> clazz = dataList.isEmpty() ? null : dataList.get(0).getClass();
+        if (dataList == null || dataList.isEmpty()) {
+            // 空数据，写入空表头
+            try (Workbook workbook = new XSSFWorkbook()) {
+                workbook.createSheet(sheetName);
+                String fileName = URLEncoder.encode(sheetName, StandardCharsets.UTF_8)
+                        .replace("+", "%20");
+                response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                response.setCharacterEncoding("UTF-8");
+                response.setHeader("Content-Disposition",
+                        "attachment; filename=" + fileName + ".xlsx");
+                try (OutputStream out = response.getOutputStream()) {
+                    workbook.write(out);
+                    out.flush();
+                }
+            }
+            return;
+        }
+        Class<?> clazz = dataList.get(0).getClass();
 
         // 收集带有 @ExcelField 注解的字段，按order排序
         List<FieldEntry> fieldEntries = new ArrayList<>();
