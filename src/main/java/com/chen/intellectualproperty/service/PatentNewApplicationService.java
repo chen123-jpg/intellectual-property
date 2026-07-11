@@ -4,7 +4,6 @@ import com.chen.intellectualproperty.model.entity.PatentNewApplication;
 import com.chen.intellectualproperty.model.query.PatentNewApplicationQuery;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 专利新申请表 Service
@@ -60,12 +59,6 @@ public interface PatentNewApplicationService {
      * @param param 查询参数
      */
     List<PatentNewApplication> findListByParam(PatentNewApplicationQuery param);
-
-    /**
-     * 根据Map参数动态查询列表
-     * @param params 查询参数Map
-     */
-    List<PatentNewApplication> findListByParams(Map<String, Object> params);
 
     /**
      * 根据参数条件查询总数

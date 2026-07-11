@@ -66,11 +66,6 @@ public class PatentNewApplicationController {
         return Result.success(service.findListByParam(param));
     }
 
-    @PostMapping("/listByParams")
-    public Result<List<PatentNewApplication>> findListByParams(@RequestBody Map<String, Object> params) {
-        return Result.success(service.findListByParams(params));
-    }
-
     @GetMapping("/export")
     public void exportExcel(HttpServletResponse response) throws IOException {
         List<PatentNewApplication> list = service.selectAll();

@@ -7,11 +7,11 @@ import com.chen.intellectualproperty.model.entity.PatentNewApplication;
 import com.chen.intellectualproperty.model.query.PatentNewApplicationQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * 专利新申请表 ServiceImpl
@@ -20,6 +20,17 @@ import java.util.Map;
  */
 @Service
 public class PatentNewApplicationServiceImpl implements PatentNewApplicationService {
+
+    private static final Set<String> ORDER_BY_WHITE_LIST = Collections.unmodifiableSet(Set.of(
+            "id desc",
+            "id asc",
+            "seq_no desc",
+            "seq_no asc",
+            "create_time desc",
+            "create_time asc",
+            "update_time desc",
+            "update_time asc"
+    ));
 
     @Autowired
     private PatentNewApplicationMapper patentNewApplicationMapper;
@@ -80,17 +91,25 @@ public class PatentNewApplicationServiceImpl implements PatentNewApplicationServ
 
     @Override
     public List<PatentNewApplication> findListByParam(PatentNewApplicationQuery param) {
+        sanitizeOrderBy(param);
         return patentNewApplicationMapper.findListByParam(param);
-    }
-
-    @Override
-    public List<PatentNewApplication> findListByParams(Map<String, Object> params) {
-        return patentNewApplicationMapper.findListByParams(params);
     }
 
     @Override
     public long selectCount(PatentNewApplicationQuery param) {
         return patentNewApplicationMapper.selectCount(param);
+    }
+
+    private void sanitizeOrderBy(PatentNewApplicationQuery param) {
+        if (param == null || param.getOrderBy() == null) {
+            return;
+        }
+        String normalized = param.getOrderBy().trim().toLowerCase();
+        if (!ORDER_BY_WHITE_LIST.contains(normalized)) {
+            param.setOrderBy(null);
+            return;
+        }
+        param.setOrderBy(normalized);
     }
 
 }

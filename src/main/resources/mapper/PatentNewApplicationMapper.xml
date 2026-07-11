@@ -276,6 +276,7 @@
         SELECT
         <include refid="Base_Column_List" />
         FROM patent_new_application
+        ORDER BY id DESC
         LIMIT #{offset}, #{limit}
     </select>
 
@@ -353,25 +354,6 @@
         </where>
         <if test="param.orderBy != null and param.orderBy != ''">
             ORDER BY ${param.orderBy}
-        </if>
-    </select>
-
-    <!-- 根据Map参数动态查询列表 -->
-    <select id="findListByParams" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List" />
-        FROM patent_new_application
-        <where>
-            <if test="params != null and !params.isEmpty()">
-                <foreach collection="params.entrySet()" item="entry" separator=" AND ">
-                    <if test="entry.key != 'orderBy' and entry.value != null">
-                        ${entry.key} = #{entry.value}
-                    </if>
-                </foreach>
-            </if>
-        </where>
-        <if test="params != null and params.orderBy != null and params.orderBy != ''">
-            ORDER BY ${params.orderBy}
         </if>
     </select>
 
