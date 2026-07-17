@@ -90,6 +90,13 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
+        <!-- Nashorn JavaScript引擎（用于算术验证码） -->
+        <dependency>
+            <groupId>org.openjdk.nashorn</groupId>
+            <artifactId>nashorn-core</artifactId>
+            <version>15.4</version>
+        </dependency>
+
         <!--   图形验证码     -->
         <dependency>
             <groupId>com.github.whvcse</groupId>

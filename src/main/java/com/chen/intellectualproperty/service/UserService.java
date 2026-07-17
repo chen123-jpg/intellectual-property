@@ -7,6 +7,7 @@ import com.chen.intellectualproperty.model.vo.UserVO;
 import com.chen.intellectualproperty.redis.RedisUtils;
 import com.chen.intellectualproperty.util.PasswordUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -14,6 +15,7 @@ import java.util.UUID;
 import static com.chen.intellectualproperty.model.constants.Constants.REDIS_KEY_TOKEN;
 import static com.chen.intellectualproperty.model.constants.Constants.REDIS_TIME_1DAY;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -29,6 +31,9 @@ public class UserService {
         user.setEmail(email);
         user.setPassword(PasswordUtils.encode(password));
         user.setNickName(nickName);
+        user.setAuthCode("");
+        user.setSmtpHost("");
+        user.setSmtpPort(0);
         userMapper.insert(user);
     }
 
@@ -37,7 +42,11 @@ public class UserService {
         if (user == null) {
             throw new BusinessException("用户不存在");
         }
-        if (!PasswordUtils.matches(password, user.getPassword())) {
+        String storedPwd = user.getPassword();
+        if (storedPwd == null) {
+            throw new BusinessException("该账号密码未设置，请联系管理员");
+        }
+        if (!PasswordUtils.matches(password, storedPwd)) {
             throw new BusinessException("密码错误");
         }
         String token = UUID.randomUUID().toString();

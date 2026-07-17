@@ -2,9 +2,9 @@ package com.chen.intellectualproperty.model.constants;
 
 public class Constants {
     //存checkCode
-    public static final String REDIS_KEY_CHECK_CODE = "easychat:checkcode:";
+    public static final String REDIS_KEY_CHECK_CODE = "patent:checkcode:";
     //存token
-    public static final String REDIS_KEY_TOKEN = "easychat:token:";
+    public static final String REDIS_KEY_TOKEN = "patent:token:";
 
     //Redis过期时间
     public static final long REDIS_TIME_1MIN = 60L;
