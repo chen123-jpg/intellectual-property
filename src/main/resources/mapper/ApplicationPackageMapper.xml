@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chen.intellectualproperty.mapper.ApplicationPackageMapper">
+
+    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.model.entity.ApplicationPackage">
+        <id column="id" property="id"/>
+        <result column="disclosure_id" property="disclosureId"/>
+        <result column="internal_no" property="internalNo"/>
+        <result column="package_type" property="packageType"/>
+        <result column="file_name" property="fileName"/>
+        <result column="file_ext" property="fileExt"/>
+        <result column="file_path" property="filePath"/>
+        <result column="file_url" property="fileUrl"/>
+        <result column="file_size" property="fileSize"/>
+        <result column="content_type" property="contentType"/>
+        <result column="version_no" property="versionNo"/>
+        <result column="is_current" property="isCurrent"/>
+        <result column="upload_user_id" property="uploadUserId"/>
+        <result column="upload_user_name" property="uploadUserName"/>
+        <result column="upload_time" property="uploadTime"/>
+        <result column="confirm_status" property="confirmStatus"/>
+        <result column="confirm_user_id" property="confirmUserId"/>
+        <result column="confirm_user_name" property="confirmUserName"/>
+        <result column="confirm_time" property="confirmTime"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO application_package (
+            disclosure_id, internal_no, package_type, file_name, file_ext, file_path, file_url,
+            file_size, content_type, version_no, is_current, upload_user_id, upload_user_name,
+            upload_time, confirm_status, remark, create_time, update_time
+        ) VALUES (
+            #{disclosureId}, #{internalNo}, #{packageType}, #{fileName}, #{fileExt}, #{filePath}, #{fileUrl},
+            #{fileSize}, #{contentType}, IFNULL(#{versionNo}, 1), IFNULL(#{isCurrent}, 1),
+            #{uploadUserId}, #{uploadUserName}, NOW(),
+            IFNULL(#{confirmStatus}, 'UNCONFIRMED'), #{remark}, NOW(), NOW()
+        )
+    </insert>
+
+    <update id="updateById">
+        UPDATE application_package
+        <set>
+            <if test="confirmStatus != null">confirm_status = #{confirmStatus},</if>
+            <if test="confirmUserId != null">confirm_user_id = #{confirmUserId},</if>
+            <if test="confirmUserName != null">confirm_user_name = #{confirmUserName},</if>
+            <if test="confirmTime != null">confirm_time = #{confirmTime},</if>
+            <if test="isCurrent != null">is_current = #{isCurrent},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="markNotCurrent">
+        UPDATE application_package
+        SET is_current = 0, update_time = NOW()
+        WHERE disclosure_id = #{disclosureId} AND package_type = #{packageType} AND is_current = 1
+    </update>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM application_package WHERE id = #{id}
+    </select>
+
+    <select id="selectCurrent" resultMap="BaseResultMap">
+        SELECT * FROM application_package
+        WHERE disclosure_id = #{disclosureId} AND package_type = #{packageType} AND is_current = 1
+        LIMIT 1
+    </select>
+
+    <select id="selectCurrentByDisclosureId" resultMap="BaseResultMap">
+        SELECT * FROM application_package
+        WHERE disclosure_id = #{disclosureId} AND is_current = 1
+        ORDER BY package_type
+    </select>
+
+    <select id="selectByDisclosureId" resultMap="BaseResultMap">
+        SELECT * FROM application_package
+        WHERE disclosure_id = #{disclosureId}
+        ORDER BY package_type, version_no DESC
+    </select>
+</mapper>

@@ -1,324 +1,225 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!-- 
-    表名: patent_disclosure
-    表注释: 专利交底信息表（T表）
-    生成时间: Thu Jul 09 15:42:06 CST 2026
--->
 <mapper namespace="com.chen.intellectualproperty.mapper.PatentDisclosureMapper">
 
-    <!-- 结果映射 -->
     <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.model.entity.PatentDisclosure">
-        <id column="id" jdbcType="BIGINT" property="id" /> <!-- 主键ID -->
-        <result column="temp_no" jdbcType="VARCHAR" property="tempNo" /> <!-- 临时编号（如T250101） -->
-        <result column="internal_no" jdbcType="VARCHAR" property="internalNo" /> <!-- 内部编号（与P表关联键） -->
-        <result column="patent_status" jdbcType="VARCHAR" property="patentStatus" /> <!-- 专利状态（如受理、N稿撰写中等） -->
-        <result column="requirement" jdbcType="VARCHAR" property="requirement" /> <!-- 要求（如一周内提交、追求授权等） -->
-        <result column="disclosure_name" jdbcType="VARCHAR" property="disclosureName" /> <!-- 专利交底名称 -->
-        <result column="applicant" jdbcType="VARCHAR" property="applicant" /> <!-- 申请人（可多个，用顿号或逗号分隔） -->
-        <result column="invited_to_group" jdbcType="BOOLEAN" property="invitedToGroup" /> <!-- 是否邀请进群（0-否，1-是） -->
-        <result column="contact_person" jdbcType="VARCHAR" property="contactPerson" /> <!-- 联系人姓名 -->
-        <result column="manager" jdbcType="VARCHAR" property="manager" /> <!-- 管理人姓名 -->
-        <result column="agent" jdbcType="VARCHAR" property="agent" /> <!-- 代理人姓名 -->
-        <result column="disclosure_date" jdbcType="DATE" property="disclosureDate" /> <!-- 交底日 -->
-        <result column="disclosure_days" jdbcType="INTEGER" property="disclosureDays" /> <!-- 交底天数（可为空） -->
-        <result column="remark" jdbcType="VARCHAR" property="remark" /> <!-- 备注 -->
-        <result column="contact_info" jdbcType="VARCHAR" property="contactInfo" /> <!-- 联系人信息（含电话、邮箱、QQ等） -->
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" /> <!-- 创建时间 -->
-        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" /> <!-- 更新时间 -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="temp_no" property="tempNo"/>
+        <result column="internal_no" property="internalNo"/>
+        <result column="patent_status" property="patentStatus"/>
+        <result column="requirement" property="requirement"/>
+        <result column="disclosure_name" property="disclosureName"/>
+        <result column="applicant" property="applicant"/>
+        <result column="inventor" property="inventor"/>
+        <result column="patent_type" property="patentType"/>
+        <result column="invited_to_group" property="invitedToGroup"/>
+        <result column="contact_person" property="contactPerson"/>
+        <result column="manager" property="manager"/>
+        <result column="agent" property="agent"/>
+        <result column="sponsor" property="sponsor"/>
+        <result column="sponsor_user_id" property="sponsorUserId"/>
+        <result column="disclosure_date" property="disclosureDate"/>
+        <result column="disclosure_days" property="disclosureDays"/>
+        <result column="remark" property="remark"/>
+        <result column="contact_info" property="contactInfo"/>
+        <result column="contact_email" property="contactEmail"/>
+        <result column="contact_phone" property="contactPhone"/>
+        <result column="entry_user_id" property="entryUserId"/>
+        <result column="entry_user_name" property="entryUserName"/>
+        <result column="copy_from_id" property="copyFromId"/>
+        <result column="no_generate_mode" property="noGenerateMode"/>
+        <result column="finalized_at" property="finalizedAt"/>
+        <result column="pending_report_at" property="pendingReportAt"/>
+        <result column="synced_to_patent" property="syncedToPatent"/>
+        <result column="patent_application_id" property="patentApplicationId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
     </resultMap>
 
-    <!-- 基础列列表 -->
     <sql id="Base_Column_List">
-        id, temp_no, internal_no, patent_status, requirement, disclosure_name, applicant, invited_to_group, contact_person, manager, agent, disclosure_date, disclosure_days, remark, contact_info, create_time, update_time
+        id, temp_no, internal_no, patent_status, requirement, disclosure_name, applicant,
+        inventor, patent_type, invited_to_group, contact_person, manager, agent, sponsor,
+        sponsor_user_id, disclosure_date, disclosure_days, remark, contact_info, contact_email,
+        contact_phone, entry_user_id, entry_user_name, copy_from_id, no_generate_mode,
+        finalized_at, pending_report_at, synced_to_patent, patent_application_id,
+        create_time, update_time
     </sql>
 
-    <!-- 插入记录 -->
-    <insert id="insert" parameterType="com.chen.intellectualproperty.model.entity.PatentDisclosure">
-        INSERT INTO patent_disclosure
-        <trim prefix="SET" suffixOverrides=",">
-            id = #{id},
-            <if test="tempNo != null">
-                temp_no = #{tempNo},
+    <sql id="Query_Where">
+        <where>
+            <if test="param.id != null">AND id = #{param.id}</if>
+            <if test="param.tempNo != null and param.tempNo != ''">AND temp_no = #{param.tempNo}</if>
+            <if test="param.internalNo != null and param.internalNo != ''">AND internal_no = #{param.internalNo}</if>
+            <if test="param.patentStatus != null and param.patentStatus != ''">AND patent_status = #{param.patentStatus}</if>
+            <if test="param.requirement != null and param.requirement != ''">AND requirement LIKE CONCAT('%', #{param.requirement}, '%')</if>
+            <if test="param.disclosureName != null and param.disclosureName != ''">AND disclosure_name = #{param.disclosureName}</if>
+            <if test="param.disclosureNameLike != null and param.disclosureNameLike != ''">AND disclosure_name LIKE CONCAT('%', #{param.disclosureNameLike}, '%')</if>
+            <if test="param.applicant != null and param.applicant != ''">AND applicant LIKE CONCAT('%', #{param.applicant}, '%')</if>
+            <if test="param.inventor != null and param.inventor != ''">AND inventor LIKE CONCAT('%', #{param.inventor}, '%')</if>
+            <if test="param.patentType != null and param.patentType != ''">AND patent_type = #{param.patentType}</if>
+            <if test="param.invitedToGroup != null">AND invited_to_group = #{param.invitedToGroup}</if>
+            <if test="param.contactPerson != null and param.contactPerson != ''">AND contact_person LIKE CONCAT('%', #{param.contactPerson}, '%')</if>
+            <if test="param.manager != null and param.manager != ''">AND manager = #{param.manager}</if>
+            <if test="param.agent != null and param.agent != ''">AND agent = #{param.agent}</if>
+            <if test="param.sponsor != null and param.sponsor != ''">AND sponsor = #{param.sponsor}</if>
+            <if test="param.sponsorUserId != null">AND sponsor_user_id = #{param.sponsorUserId}</if>
+            <if test="param.entryUserId != null">AND entry_user_id = #{param.entryUserId}</if>
+            <if test="param.disclosureDate != null">AND disclosure_date = #{param.disclosureDate}</if>
+            <if test="param.disclosureDateFrom != null">AND disclosure_date &gt;= #{param.disclosureDateFrom}</if>
+            <if test="param.disclosureDateTo != null">AND disclosure_date &lt;= #{param.disclosureDateTo}</if>
+            <if test="param.syncedToPatent != null">AND synced_to_patent = #{param.syncedToPatent}</if>
+            <if test="param.contactEmail != null and param.contactEmail != ''">AND contact_email = #{param.contactEmail}</if>
+            <if test="param.keyword != null and param.keyword != ''">
+                AND (
+                    temp_no LIKE CONCAT('%', #{param.keyword}, '%')
+                    OR internal_no LIKE CONCAT('%', #{param.keyword}, '%')
+                    OR disclosure_name LIKE CONCAT('%', #{param.keyword}, '%')
+                    OR applicant LIKE CONCAT('%', #{param.keyword}, '%')
+                    OR contact_person LIKE CONCAT('%', #{param.keyword}, '%')
+                    OR sponsor LIKE CONCAT('%', #{param.keyword}, '%')
+                )
             </if>
-            <if test="internalNo != null">
-                internal_no = #{internalNo},
-            </if>
-            <if test="patentStatus != null">
-                patent_status = #{patentStatus},
-            </if>
-            <if test="requirement != null">
-                requirement = #{requirement},
-            </if>
-            <if test="disclosureName != null">
-                disclosure_name = #{disclosureName},
-            </if>
-            <if test="applicant != null">
-                applicant = #{applicant},
-            </if>
-            <if test="invitedToGroup != null">
-                invited_to_group = #{invitedToGroup},
-            </if>
-            <if test="contactPerson != null">
-                contact_person = #{contactPerson},
-            </if>
-            <if test="manager != null">
-                manager = #{manager},
-            </if>
-            <if test="agent != null">
-                agent = #{agent},
-            </if>
-            <if test="disclosureDate != null">
-                disclosure_date = #{disclosureDate},
-            </if>
-            <if test="disclosureDays != null">
-                disclosure_days = #{disclosureDays},
-            </if>
-            <if test="remark != null">
-                remark = #{remark},
-            </if>
-            <if test="contactInfo != null">
-                contact_info = #{contactInfo},
-            </if>
-            create_time = NOW(),
-            update_time = NOW(),
-        </trim>
+        </where>
+    </sql>
+
+    <insert id="insert" parameterType="com.chen.intellectualproperty.model.entity.PatentDisclosure"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO patent_disclosure (
+            temp_no, internal_no, patent_status, requirement, disclosure_name, applicant,
+            inventor, patent_type, invited_to_group, contact_person, manager, agent, sponsor,
+            sponsor_user_id, disclosure_date, disclosure_days, remark, contact_info, contact_email,
+            contact_phone, entry_user_id, entry_user_name, copy_from_id, no_generate_mode,
+            finalized_at, pending_report_at, synced_to_patent, patent_application_id,
+            create_time, update_time
+        ) VALUES (
+            #{tempNo}, #{internalNo}, #{patentStatus}, #{requirement}, #{disclosureName}, #{applicant},
+            #{inventor}, #{patentType}, #{invitedToGroup}, #{contactPerson}, #{manager}, #{agent}, #{sponsor},
+            #{sponsorUserId}, #{disclosureDate}, #{disclosureDays}, #{remark}, #{contactInfo}, #{contactEmail},
+            #{contactPhone}, #{entryUserId}, #{entryUserName}, #{copyFromId}, #{noGenerateMode},
+            #{finalizedAt}, #{pendingReportAt},
+            IFNULL(#{syncedToPatent}, 0), #{patentApplicationId},
+            NOW(), NOW()
+        )
     </insert>
 
-    <!-- 插入或更新记录 -->
-    <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.model.entity.PatentDisclosure">
-        INSERT INTO patent_disclosure
-        <trim prefix="SET" suffixOverrides=",">
-            id = #{id},
-            <if test="tempNo != null">
-                temp_no = #{tempNo},
-            </if>
-            <if test="internalNo != null">
-                internal_no = #{internalNo},
-            </if>
-            <if test="patentStatus != null">
-                patent_status = #{patentStatus},
-            </if>
-            <if test="requirement != null">
-                requirement = #{requirement},
-            </if>
-            <if test="disclosureName != null">
-                disclosure_name = #{disclosureName},
-            </if>
-            <if test="applicant != null">
-                applicant = #{applicant},
-            </if>
-            <if test="invitedToGroup != null">
-                invited_to_group = #{invitedToGroup},
-            </if>
-            <if test="contactPerson != null">
-                contact_person = #{contactPerson},
-            </if>
-            <if test="manager != null">
-                manager = #{manager},
-            </if>
-            <if test="agent != null">
-                agent = #{agent},
-            </if>
-            <if test="disclosureDate != null">
-                disclosure_date = #{disclosureDate},
-            </if>
-            <if test="disclosureDays != null">
-                disclosure_days = #{disclosureDays},
-            </if>
-            <if test="remark != null">
-                remark = #{remark},
-            </if>
-            <if test="contactInfo != null">
-                contact_info = #{contactInfo},
-            </if>
-            create_time =
-            <choose>
-                <when test="createTime != null">
-                    #{createTime}
-                </when>
-                <otherwise>
-                    NOW()
-                </otherwise>
-            </choose>,
-            update_time = NOW(),
-        </trim>
+    <insert id="insertOrUpdate" parameterType="com.chen.intellectualproperty.model.entity.PatentDisclosure"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO patent_disclosure (
+            id, temp_no, internal_no, patent_status, requirement, disclosure_name, applicant,
+            inventor, patent_type, invited_to_group, contact_person, manager, agent, sponsor,
+            sponsor_user_id, disclosure_date, disclosure_days, remark, contact_info, contact_email,
+            contact_phone, entry_user_id, entry_user_name, copy_from_id, no_generate_mode,
+            finalized_at, pending_report_at, synced_to_patent, patent_application_id,
+            create_time, update_time
+        ) VALUES (
+            #{id}, #{tempNo}, #{internalNo}, #{patentStatus}, #{requirement}, #{disclosureName}, #{applicant},
+            #{inventor}, #{patentType}, #{invitedToGroup}, #{contactPerson}, #{manager}, #{agent}, #{sponsor},
+            #{sponsorUserId}, #{disclosureDate}, #{disclosureDays}, #{remark}, #{contactInfo}, #{contactEmail},
+            #{contactPhone}, #{entryUserId}, #{entryUserName}, #{copyFromId}, #{noGenerateMode},
+            #{finalizedAt}, #{pendingReportAt}, IFNULL(#{syncedToPatent}, 0), #{patentApplicationId},
+            NOW(), NOW()
+        )
         ON DUPLICATE KEY UPDATE
-        <trim suffixOverrides=",">
-            id = VALUES(id),
             temp_no = VALUES(temp_no),
             internal_no = VALUES(internal_no),
             patent_status = VALUES(patent_status),
             requirement = VALUES(requirement),
             disclosure_name = VALUES(disclosure_name),
             applicant = VALUES(applicant),
+            inventor = VALUES(inventor),
+            patent_type = VALUES(patent_type),
             invited_to_group = VALUES(invited_to_group),
             contact_person = VALUES(contact_person),
             manager = VALUES(manager),
             agent = VALUES(agent),
+            sponsor = VALUES(sponsor),
+            sponsor_user_id = VALUES(sponsor_user_id),
             disclosure_date = VALUES(disclosure_date),
             disclosure_days = VALUES(disclosure_days),
             remark = VALUES(remark),
             contact_info = VALUES(contact_info),
-            create_time = VALUES(create_time),
-            update_time = NOW(),
-        </trim>
+            contact_email = VALUES(contact_email),
+            contact_phone = VALUES(contact_phone),
+            entry_user_id = VALUES(entry_user_id),
+            entry_user_name = VALUES(entry_user_name),
+            copy_from_id = VALUES(copy_from_id),
+            no_generate_mode = VALUES(no_generate_mode),
+            finalized_at = VALUES(finalized_at),
+            pending_report_at = VALUES(pending_report_at),
+            synced_to_patent = VALUES(synced_to_patent),
+            patent_application_id = VALUES(patent_application_id),
+            update_time = NOW()
     </insert>
 
-    <!-- 根据主键删除记录 -->
     <delete id="deleteById" parameterType="Long">
-        DELETE FROM patent_disclosure
-        WHERE id = #{id}
+        DELETE FROM patent_disclosure WHERE id = #{id}
     </delete>
 
-    <!-- 根据主键更新记录 -->
     <update id="updateById" parameterType="com.chen.intellectualproperty.model.entity.PatentDisclosure">
         UPDATE patent_disclosure
-        SET
-        <trim suffixOverrides=",">
-            <if test="tempNo != null">
-                temp_no = #{tempNo},
-            </if>
-            <if test="internalNo != null">
-                internal_no = #{internalNo},
-            </if>
-            <if test="patentStatus != null">
-                patent_status = #{patentStatus},
-            </if>
-            <if test="requirement != null">
-                requirement = #{requirement},
-            </if>
-            <if test="disclosureName != null">
-                disclosure_name = #{disclosureName},
-            </if>
-            <if test="applicant != null">
-                applicant = #{applicant},
-            </if>
-            <if test="invitedToGroup != null">
-                invited_to_group = #{invitedToGroup},
-            </if>
-            <if test="contactPerson != null">
-                contact_person = #{contactPerson},
-            </if>
-            <if test="manager != null">
-                manager = #{manager},
-            </if>
-            <if test="agent != null">
-                agent = #{agent},
-            </if>
-            <if test="disclosureDate != null">
-                disclosure_date = #{disclosureDate},
-            </if>
-            <if test="disclosureDays != null">
-                disclosure_days = #{disclosureDays},
-            </if>
-            <if test="remark != null">
-                remark = #{remark},
-            </if>
-            <if test="contactInfo != null">
-                contact_info = #{contactInfo},
-            </if>
-            update_time = NOW(),
-        </trim>
+        <set>
+            <if test="tempNo != null">temp_no = #{tempNo},</if>
+            <if test="internalNo != null">internal_no = #{internalNo},</if>
+            <if test="patentStatus != null">patent_status = #{patentStatus},</if>
+            <if test="requirement != null">requirement = #{requirement},</if>
+            <if test="disclosureName != null">disclosure_name = #{disclosureName},</if>
+            <if test="applicant != null">applicant = #{applicant},</if>
+            <if test="inventor != null">inventor = #{inventor},</if>
+            <if test="patentType != null">patent_type = #{patentType},</if>
+            <if test="invitedToGroup != null">invited_to_group = #{invitedToGroup},</if>
+            <if test="contactPerson != null">contact_person = #{contactPerson},</if>
+            <if test="manager != null">manager = #{manager},</if>
+            <if test="agent != null">agent = #{agent},</if>
+            <if test="sponsor != null">sponsor = #{sponsor},</if>
+            <if test="sponsorUserId != null">sponsor_user_id = #{sponsorUserId},</if>
+            <if test="disclosureDate != null">disclosure_date = #{disclosureDate},</if>
+            <if test="disclosureDays != null">disclosure_days = #{disclosureDays},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="contactInfo != null">contact_info = #{contactInfo},</if>
+            <if test="contactEmail != null">contact_email = #{contactEmail},</if>
+            <if test="contactPhone != null">contact_phone = #{contactPhone},</if>
+            <if test="entryUserId != null">entry_user_id = #{entryUserId},</if>
+            <if test="entryUserName != null">entry_user_name = #{entryUserName},</if>
+            <if test="copyFromId != null">copy_from_id = #{copyFromId},</if>
+            <if test="noGenerateMode != null">no_generate_mode = #{noGenerateMode},</if>
+            <if test="finalizedAt != null">finalized_at = #{finalizedAt},</if>
+            <if test="pendingReportAt != null">pending_report_at = #{pendingReportAt},</if>
+            <if test="syncedToPatent != null">synced_to_patent = #{syncedToPatent},</if>
+            <if test="patentApplicationId != null">patent_application_id = #{patentApplicationId},</if>
+            update_time = NOW()
+        </set>
         WHERE id = #{id}
     </update>
 
-    <!-- 根据主键查询记录 -->
     <select id="selectById" parameterType="Long" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List" />
-        FROM patent_disclosure
-        WHERE id = #{id}
+        SELECT <include refid="Base_Column_List"/> FROM patent_disclosure WHERE id = #{id}
     </select>
 
-    <!-- 查询所有记录 -->
     <select id="selectAll" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List" />
-        FROM patent_disclosure
+        SELECT <include refid="Base_Column_List"/> FROM patent_disclosure ORDER BY id DESC
     </select>
 
-    <!-- 分页查询 -->
     <select id="selectPage" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List" />
-        FROM patent_disclosure
+        SELECT <include refid="Base_Column_List"/> FROM patent_disclosure
+        ORDER BY id DESC
         LIMIT #{offset}, #{limit}
     </select>
 
-    <!-- 查询总记录数 -->
     <select id="count" resultType="long">
         SELECT COUNT(*) FROM patent_disclosure
     </select>
 
-    <!-- 根据参数条件查询列表 -->
     <select id="findListByParam" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List" />
-        FROM patent_disclosure
-        <where>
-            <if test="param.id != null">
-                AND id = #{param.id}
-            </if>
-            <if test="param.tempNo != null">
-                AND temp_no = #{param.tempNo}
-            </if>
-            <if test="param.internalNo != null">
-                AND internal_no = #{param.internalNo}
-            </if>
-            <if test="param.patentStatus != null">
-                AND patent_status = #{param.patentStatus}
-            </if>
-            <if test="param.requirement != null">
-                AND requirement = #{param.requirement}
-            </if>
-            <if test="param.disclosureName != null">
-                AND disclosure_name = #{param.disclosureName}
-            </if>
-            <if test="param.applicant != null">
-                AND applicant = #{param.applicant}
-            </if>
-            <if test="param.invitedToGroup != null">
-                AND invited_to_group = #{param.invitedToGroup}
-            </if>
-            <if test="param.contactPerson != null">
-                AND contact_person = #{param.contactPerson}
-            </if>
-            <if test="param.manager != null">
-                AND manager = #{param.manager}
-            </if>
-            <if test="param.agent != null">
-                AND agent = #{param.agent}
-            </if>
-            <if test="param.disclosureDate != null">
-                AND disclosure_date = #{param.disclosureDate}
-            </if>
-            <if test="param.disclosureDays != null">
-                AND disclosure_days = #{param.disclosureDays}
-            </if>
-            <if test="param.remark != null">
-                AND remark = #{param.remark}
-            </if>
-            <if test="param.contactInfo != null">
-                AND contact_info = #{param.contactInfo}
-            </if>
-            <if test="param.createTime != null">
-                AND create_time = #{param.createTime}
-            </if>
-            <if test="param.updateTime != null">
-                AND update_time = #{param.updateTime}
-            </if>
-        </where>
-        <if test="param.orderBy != null and param.orderBy != ''">
-            ORDER BY ${param.orderBy}
-        </if>
+        SELECT <include refid="Base_Column_List"/> FROM patent_disclosure
+        <include refid="Query_Where"/>
+        <choose>
+            <when test="param.orderBy != null and param.orderBy != ''">ORDER BY ${param.orderBy}</when>
+            <otherwise>ORDER BY id DESC</otherwise>
+        </choose>
     </select>
 
-    <!-- 根据Map参数动态查询列表 -->
     <select id="findListByParams" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List" />
-        FROM patent_disclosure
+        SELECT <include refid="Base_Column_List"/> FROM patent_disclosure
         <where>
             <if test="params != null and !params.isEmpty()">
                 <foreach collection="params.entrySet()" item="entry" separator=" AND ">
@@ -333,62 +234,9 @@
         </if>
     </select>
 
-    <!-- 根据参数条件查询总数 -->
     <select id="selectCount" resultType="long">
         SELECT COUNT(*) FROM patent_disclosure
-        <where>
-            <if test="param.id != null">
-                AND id = #{param.id}
-            </if>
-            <if test="param.tempNo != null">
-                AND temp_no = #{param.tempNo}
-            </if>
-            <if test="param.internalNo != null">
-                AND internal_no = #{param.internalNo}
-            </if>
-            <if test="param.patentStatus != null">
-                AND patent_status = #{param.patentStatus}
-            </if>
-            <if test="param.requirement != null">
-                AND requirement = #{param.requirement}
-            </if>
-            <if test="param.disclosureName != null">
-                AND disclosure_name = #{param.disclosureName}
-            </if>
-            <if test="param.applicant != null">
-                AND applicant = #{param.applicant}
-            </if>
-            <if test="param.invitedToGroup != null">
-                AND invited_to_group = #{param.invitedToGroup}
-            </if>
-            <if test="param.contactPerson != null">
-                AND contact_person = #{param.contactPerson}
-            </if>
-            <if test="param.manager != null">
-                AND manager = #{param.manager}
-            </if>
-            <if test="param.agent != null">
-                AND agent = #{param.agent}
-            </if>
-            <if test="param.disclosureDate != null">
-                AND disclosure_date = #{param.disclosureDate}
-            </if>
-            <if test="param.disclosureDays != null">
-                AND disclosure_days = #{param.disclosureDays}
-            </if>
-            <if test="param.remark != null">
-                AND remark = #{param.remark}
-            </if>
-            <if test="param.contactInfo != null">
-                AND contact_info = #{param.contactInfo}
-            </if>
-            <if test="param.createTime != null">
-                AND create_time = #{param.createTime}
-            </if>
-            <if test="param.updateTime != null">
-                AND update_time = #{param.updateTime}
-            </if>
-        </where>
+        <include refid="Query_Where"/>
     </select>
 
 </mapper>

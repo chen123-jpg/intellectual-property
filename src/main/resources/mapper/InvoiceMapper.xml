@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chen.intellectualproperty.mapper.InvoiceMapper">
+
+    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.model.entity.Invoice">
+        <id column="id" property="id"/>
+        <result column="disclosure_id" property="disclosureId"/>
+        <result column="internal_no" property="internalNo"/>
+        <result column="temp_no" property="tempNo"/>
+        <result column="disclosure_name" property="disclosureName"/>
+        <result column="applicant" property="applicant"/>
+        <result column="invoice_title" property="invoiceTitle"/>
+        <result column="tax_no" property="taxNo"/>
+        <result column="invoice_type" property="invoiceType"/>
+        <result column="invoice_amount" property="invoiceAmount"/>
+        <result column="invoice_status" property="invoiceStatus"/>
+        <result column="invoice_no" property="invoiceNo"/>
+        <result column="invoice_date" property="invoiceDate"/>
+        <result column="remark" property="remark"/>
+        <result column="source" property="source"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.chen.intellectualproperty.model.entity.Invoice">
+        INSERT INTO invoice (
+            disclosure_id, internal_no, temp_no, disclosure_name, applicant,
+            invoice_title, tax_no, invoice_type, invoice_amount, invoice_status,
+            invoice_no, invoice_date, remark, source, create_time, update_time
+        ) VALUES (
+            #{disclosureId}, #{internalNo}, #{tempNo}, #{disclosureName}, #{applicant},
+            #{invoiceTitle}, #{taxNo}, #{invoiceType}, #{invoiceAmount},
+            IFNULL(#{invoiceStatus}, 'PENDING'), #{invoiceNo}, #{invoiceDate}, #{remark},
+            IFNULL(#{source}, 'DISCLOSURE_SYNC'), NOW(), NOW()
+        )
+    </insert>
+
+    <update id="updateById" parameterType="com.chen.intellectualproperty.model.entity.Invoice">
+        UPDATE invoice
+        <set>
+            <if test="invoiceTitle != null">invoice_title = #{invoiceTitle},</if>
+            <if test="taxNo != null">tax_no = #{taxNo},</if>
+            <if test="invoiceType != null">invoice_type = #{invoiceType},</if>
+            <if test="invoiceAmount != null">invoice_amount = #{invoiceAmount},</if>
+            <if test="invoiceStatus != null">invoice_status = #{invoiceStatus},</if>
+            <if test="invoiceNo != null">invoice_no = #{invoiceNo},</if>
+            <if test="invoiceDate != null">invoice_date = #{invoiceDate},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM invoice WHERE id = #{id}
+    </select>
+
+    <select id="selectByDisclosureId" resultMap="BaseResultMap">
+        SELECT * FROM invoice WHERE disclosure_id = #{disclosureId} ORDER BY id DESC
+    </select>
+</mapper>

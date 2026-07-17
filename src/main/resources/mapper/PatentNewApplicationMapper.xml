@@ -37,10 +37,13 @@
     </sql>
 
     <!-- 插入记录 -->
-    <insert id="insert" parameterType="com.chen.intellectualproperty.model.entity.PatentNewApplication">
+    <insert id="insert" parameterType="com.chen.intellectualproperty.model.entity.PatentNewApplication"
+            useGeneratedKeys="true" keyProperty="id">
         INSERT INTO patent_new_application
         <trim prefix="SET" suffixOverrides=",">
-            id = #{id},
+            <if test="id != null">
+                id = #{id},
+            </if>
             <if test="internalNo != null">
                 internal_no = #{internalNo},
             </if>

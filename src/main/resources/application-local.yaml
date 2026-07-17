@@ -1,0 +1,8 @@
+# 本地测试库（本机 MySQL 8.0，端口 3306）
+# 数据来源：E:\DB_Backup 中从远程导出的备份
+spring:
+  datasource:
+    url: "jdbc:mysql://127.0.0.1:3306/intellectual-property?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&charset=utf8mb4"
+    username: root
+    password: xiaojiucheng1226
+    driver-class-name: com.mysql.cj.jdbc.Driver

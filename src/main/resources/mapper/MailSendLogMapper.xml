@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chen.intellectualproperty.mapper.MailSendLogMapper">
+
+    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.model.entity.MailSendLog">
+        <id column="id" property="id"/>
+        <result column="disclosure_id" property="disclosureId"/>
+        <result column="internal_no" property="internalNo"/>
+        <result column="template_id" property="templateId"/>
+        <result column="template_code" property="templateCode"/>
+        <result column="from_email" property="fromEmail"/>
+        <result column="to_emails" property="toEmails"/>
+        <result column="cc_emails" property="ccEmails"/>
+        <result column="subject" property="subject"/>
+        <result column="content" property="content"/>
+        <result column="send_status" property="sendStatus"/>
+        <result column="error_message" property="errorMessage"/>
+        <result column="sender_user_id" property="senderUserId"/>
+        <result column="sender_name" property="senderName"/>
+        <result column="sent_at" property="sentAt"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mail_send_log (
+            disclosure_id, internal_no, template_id, template_code, from_email, to_emails, cc_emails,
+            subject, content, send_status, error_message, sender_user_id, sender_name, sent_at, create_time
+        ) VALUES (
+            #{disclosureId}, #{internalNo}, #{templateId}, #{templateCode}, #{fromEmail}, #{toEmails}, #{ccEmails},
+            #{subject}, #{content}, IFNULL(#{sendStatus}, 'PENDING'), #{errorMessage},
+            #{senderUserId}, #{senderName}, #{sentAt}, NOW()
+        )
+    </insert>
+
+    <update id="updateById">
+        UPDATE mail_send_log
+        <set>
+            <if test="sendStatus != null">send_status = #{sendStatus},</if>
+            <if test="errorMessage != null">error_message = #{errorMessage},</if>
+            <if test="fromEmail != null">from_email = #{fromEmail},</if>
+            <if test="sentAt != null">sent_at = #{sentAt},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM mail_send_log WHERE id = #{id}
+    </select>
+
+    <select id="selectByDisclosureId" resultMap="BaseResultMap">
+        SELECT * FROM mail_send_log WHERE disclosure_id = #{disclosureId} ORDER BY id DESC
+    </select>
+</mapper>

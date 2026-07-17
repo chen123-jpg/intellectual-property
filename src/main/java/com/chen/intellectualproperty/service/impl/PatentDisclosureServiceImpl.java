@@ -27,10 +27,16 @@ public class PatentDisclosureServiceImpl implements PatentDisclosureService {
 
     @Override
     public int insert(PatentDisclosure record) {
-        String tempNo = generateNoService.generateNo("patent_disclosure","temp_no","T");
-        String internalNo = generateNoService.generateNo("patent_disclosure","internal_no","P");
-        record.setTempNo(tempNo);
-        record.setInternalNo(internalNo);
+        // 兼容旧接口：未传编号时自动生成。完整交底流程请走 /api/disclosure-workflow
+        if (record.getTempNo() == null || record.getTempNo().isEmpty()) {
+            record.setTempNo(generateNoService.generateNo("patent_disclosure", "temp_no", "T"));
+        }
+        if (record.getInternalNo() == null || record.getInternalNo().isEmpty()) {
+            record.setInternalNo(generateNoService.generateNo("patent_disclosure", "internal_no", "P"));
+        }
+        if (record.getSyncedToPatent() == null) {
+            record.setSyncedToPatent(0);
+        }
         return patentDisclosureMapper.insert(record);
     }
 

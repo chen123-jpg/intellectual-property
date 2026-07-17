@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chen.intellectualproperty.mapper.FeePaymentMapper">
+
+    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.model.entity.FeePayment">
+        <id column="id" property="id"/>
+        <result column="disclosure_id" property="disclosureId"/>
+        <result column="internal_no" property="internalNo"/>
+        <result column="temp_no" property="tempNo"/>
+        <result column="disclosure_name" property="disclosureName"/>
+        <result column="applicant" property="applicant"/>
+        <result column="fee_type" property="feeType"/>
+        <result column="fee_amount" property="feeAmount"/>
+        <result column="payment_deadline" property="paymentDeadline"/>
+        <result column="payment_date" property="paymentDate"/>
+        <result column="payment_status" property="paymentStatus"/>
+        <result column="payer" property="payer"/>
+        <result column="remark" property="remark"/>
+        <result column="source" property="source"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.chen.intellectualproperty.model.entity.FeePayment">
+        INSERT INTO fee_payment (
+            disclosure_id, internal_no, temp_no, disclosure_name, applicant, fee_type,
+            fee_amount, payment_deadline, payment_date, payment_status, payer, remark, source,
+            create_time, update_time
+        ) VALUES (
+            #{disclosureId}, #{internalNo}, #{tempNo}, #{disclosureName}, #{applicant},
+            IFNULL(#{feeType}, 'DEFAULT'), #{feeAmount}, #{paymentDeadline}, #{paymentDate},
+            IFNULL(#{paymentStatus}, 'PENDING'), #{payer}, #{remark},
+            IFNULL(#{source}, 'DISCLOSURE_SYNC'), NOW(), NOW()
+        )
+    </insert>
+
+    <update id="updateById" parameterType="com.chen.intellectualproperty.model.entity.FeePayment">
+        UPDATE fee_payment
+        <set>
+            <if test="feeType != null">fee_type = #{feeType},</if>
+            <if test="feeAmount != null">fee_amount = #{feeAmount},</if>
+            <if test="paymentDeadline != null">payment_deadline = #{paymentDeadline},</if>
+            <if test="paymentDate != null">payment_date = #{paymentDate},</if>
+            <if test="paymentStatus != null">payment_status = #{paymentStatus},</if>
+            <if test="payer != null">payer = #{payer},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM fee_payment WHERE id = #{id}
+    </select>
+
+    <select id="selectByDisclosureId" resultMap="BaseResultMap">
+        SELECT * FROM fee_payment WHERE disclosure_id = #{disclosureId} ORDER BY id DESC
+    </select>
+</mapper>

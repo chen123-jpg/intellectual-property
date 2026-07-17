@@ -7,10 +7,16 @@ spring:
   application:
     name: intellectual-property
 
+  # 默认使用本地库（方便测试）。切回远程时：--spring.profiles.active=remote
+  # 或启动时加环境变量 SPRING_PROFILES_ACTIVE=remote
+  profiles:
+    active: local
+
   datasource:
-    url: "jdbc:mysql://47.109.39.226:3306/intellectual-property?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&charset=utf8mb4"
+    # 默认占位，会被 profile 覆盖
+    url: "jdbc:mysql://127.0.0.1:3306/intellectual-property?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&charset=utf8mb4"
     username: root
-    password: 060803
+    password: xiaojiucheng1226
     driver-class-name: com.mysql.cj.jdbc.Driver
   api-docs:
     enabled: true

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chen.intellectualproperty.mapper.MailTemplateMapper">
+
+    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.model.entity.MailTemplate">
+        <id column="id" property="id"/>
+        <result column="template_code" property="templateCode"/>
+        <result column="template_name" property="templateName"/>
+        <result column="subject" property="subject"/>
+        <result column="content" property="content"/>
+        <result column="default_attach_types" property="defaultAttachTypes"/>
+        <result column="enabled" property="enabled"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mail_template (template_code, template_name, subject, content, default_attach_types, enabled, create_time, update_time)
+        VALUES (#{templateCode}, #{templateName}, #{subject}, #{content}, #{defaultAttachTypes}, IFNULL(#{enabled}, 1), NOW(), NOW())
+    </insert>
+
+    <update id="updateById">
+        UPDATE mail_template
+        <set>
+            <if test="templateName != null">template_name = #{templateName},</if>
+            <if test="subject != null">subject = #{subject},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="defaultAttachTypes != null">default_attach_types = #{defaultAttachTypes},</if>
+            <if test="enabled != null">enabled = #{enabled},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM mail_template WHERE id = #{id}
+    </select>
+
+    <select id="selectByCode" resultMap="BaseResultMap">
+        SELECT * FROM mail_template WHERE template_code = #{templateCode} LIMIT 1
+    </select>
+
+    <select id="selectEnabled" resultMap="BaseResultMap">
+        SELECT * FROM mail_template WHERE enabled = 1 ORDER BY id ASC
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT * FROM mail_template ORDER BY id ASC
+    </select>
+</mapper>
