@@ -1,6 +1,8 @@
 package com.chen.intellectualproperty.controller;
 
 import com.chen.intellectualproperty.model.dto.MailRequest;
+import com.chen.intellectualproperty.model.entity.User;
+import com.chen.intellectualproperty.service.UserService;
 import com.chen.intellectualproperty.service.impl.MailService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +18,13 @@ import java.util.Collections;
 public class MailController {
 
     private final MailService mailService;
+    private final UserService userService;
 
     @PostMapping("/send")
-    public ResponseEntity<?> sendMail(@ModelAttribute MailRequest request) {
+    public ResponseEntity<?> sendMail(@RequestParam String token, @ModelAttribute MailRequest request) {
         try {
-            mailService.sendMail(request.getTo(), request.getSubject(),
+            User sender = userService.getUserByToken(token);
+            mailService.sendMail(sender, request.getTo(), request.getSubject(),
                     request.getText(), request.getAttachments());
             return ResponseEntity.ok(Collections.singletonMap("message", "发送成功"));
         } catch (MessagingException | IOException e) {

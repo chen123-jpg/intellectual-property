@@ -7,7 +7,8 @@ public class User {
     private Integer id;
     private String email;
     private String password;
+    private String nickName;
     private String authCode;
-    private String smtpHost;    // 自定义SMTP服务器（可选）
-    private Integer smtpPort;   // 自定义SMTP端口（可选）
+    private String smtpHost;
+    private Integer smtpPort;
 }

@@ -27,6 +27,13 @@ public class Result<T> {
         return r;
     }
 
+    public static <T> Result<T> successMsg(String message) {
+        Result<T> r = new Result<>();
+        r.code = 200;
+        r.message = message;
+        return r;
+    }
+
     public static <T> Result<T> fail(String message) {
         Result<T> r = new Result<>();
         r.code = 500;

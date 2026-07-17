@@ -20,31 +20,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()   // 所有请求直接放行
-                )
-                .formLogin(form -> form
-                        .loginProcessingUrl("/api/user/login")
-                        .usernameParameter("email")
-                        .passwordParameter("password")
-                        .successHandler((req, res, auth) -> {
-                            res.setContentType("application/json;charset=utf-8");
-                            res.getWriter().write("{\"message\":\"登录成功\"}");
-                        })
-                        .failureHandler((req, res, ex) -> {
-                            res.setContentType("application/json;charset=utf-8");
-                            res.setStatus(401);
-                            res.getWriter().write("{\"error\":\"登录失败：" + ex.getMessage() + "\"}");
-                        })
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/api/user/logout")
-                        .logoutSuccessHandler((req, res, auth) -> {
-                            res.setContentType("application/json;charset=utf-8");
-                            res.getWriter().write("{\"message\":\"已登出\"}");
-                        })
-                )
-                .csrf(csrf -> csrf.disable());
+                        .anyRequest().permitAll()
+                );
         return http.build();
     }
 }

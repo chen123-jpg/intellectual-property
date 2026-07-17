@@ -3,14 +3,15 @@ server:
   address: 0.0.0.0
 
 spring:
-#    password: kzlapgltzlkceade   # 授权码，非登录密码
+  #  password: kzlapgltzlkceade
+  #  ENjfmB9S6CJSagDL# 授权码，非登录密码
   application:
     name: intellectual-property
 
   # 默认使用本地库（方便测试）。切回远程时：--spring.profiles.active=remote
   # 或启动时加环境变量 SPRING_PROFILES_ACTIVE=remote
   profiles:
-    active: local
+    active: remote
 
   datasource:
     # 默认占位，会被 profile 覆盖
@@ -37,6 +38,12 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 3000ms
 
 app:
   upload:

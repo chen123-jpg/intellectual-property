@@ -1,7 +1,7 @@
 package com.chen.intellectualproperty.service.impl;
 
+import com.chen.intellectualproperty.model.entity.User;
 import com.chen.intellectualproperty.model.enums.MailServerConfig;
-import com.chen.intellectualproperty.security.CustomUserDetails;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -9,8 +9,6 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,19 +21,19 @@ import java.util.Properties;
 @Service
 public class MailService {
 
-    public void sendMail(String to, String subject, String text,
+    public void sendMail(User sender, String to, String subject, String text,
                          List<MultipartFile> attachments) throws MessagingException, IOException {
-        sendMailInternal(to, null, subject, text, attachments, null);
+        sendMailInternal(sender, to, null, subject, text, attachments, null);
     }
 
     /**
      * 使用磁盘附件发送（交底流程）。
      * @return 发件人邮箱
      */
-    public String sendMailWithFiles(String to, String cc, String subject, String text,
+    public String sendMailWithFiles(User sender, String to, String cc, String subject, String text,
                                     List<Path> filePaths, List<String> fileNames)
             throws MessagingException, IOException {
-        return sendMailInternal(to, cc, subject, text, null, pairFiles(filePaths, fileNames));
+        return sendMailInternal(sender, to, cc, subject, text, null, pairFiles(filePaths, fileNames));
     }
 
     private List<NamedPath> pairFiles(List<Path> filePaths, List<String> fileNames) {
@@ -52,14 +50,13 @@ public class MailService {
         return list;
     }
 
-    private String sendMailInternal(String to, String cc, String subject, String text,
+    private String sendMailInternal(User sender, String to, String cc, String subject, String text,
                                     List<MultipartFile> multipartFiles,
                                     List<NamedPath> pathFiles) throws MessagingException, IOException {
-        CustomUserDetails user = currentUser();
-        String email = user.getEmail();
-        String authCode = user.getAuthCode();
-        String smtpHost = user.getSmtpHost();
-        Integer smtpPort = user.getSmtpPort();
+        String email = sender.getEmail();
+        String authCode = sender.getAuthCode();
+        String smtpHost = sender.getSmtpHost();
+        Integer smtpPort = sender.getSmtpPort();
 
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         if (smtpHost != null && smtpPort != null) {
@@ -119,14 +116,6 @@ public class MailService {
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .toArray(String[]::new);
-    }
-
-    private CustomUserDetails currentUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !(auth.getPrincipal() instanceof CustomUserDetails)) {
-            throw new IllegalStateException("发送邮件需要先登录");
-        }
-        return (CustomUserDetails) auth.getPrincipal();
     }
 
     private record NamedPath(Path path, String name) {}

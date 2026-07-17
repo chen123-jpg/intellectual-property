@@ -11,6 +11,7 @@ import com.chen.intellectualproperty.model.query.PatentDisclosureQuery;
 import com.chen.intellectualproperty.service.DisclosureWorkflowService;
 import com.chen.intellectualproperty.service.GenerateNoService;
 import com.chen.intellectualproperty.service.PatentNewApplicationService;
+import com.chen.intellectualproperty.service.UserService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +52,7 @@ public class DisclosureWorkflowServiceImpl implements DisclosureWorkflowService 
     private final GenerateNoService generateNoService;
     private final PatentNewApplicationService patentNewApplicationService;
     private final MailService mailService;
+    private final UserService userService;
 
     @Value("${app.upload.dir}")
     private String uploadDir;
@@ -500,7 +502,13 @@ public class DisclosureWorkflowServiceImpl implements DisclosureWorkflowService 
                     names.add(a.getFileName());
                 }
             }
-            String from = mailService.sendMailWithFiles(to, dto.getCcEmails(), subject, content, paths, names);
+            User sender = dto.getSenderUserId() != null
+                    ? userService.findById(dto.getSenderUserId().intValue())
+                    : null;
+            if (sender == null) {
+                throw new IllegalArgumentException("发件人信息缺失，请先登录");
+            }
+            String from = mailService.sendMailWithFiles(sender, to, dto.getCcEmails(), subject, content, paths, names);
             MailSendLog ok = new MailSendLog();
             ok.setId(logEntity.getId());
             ok.setSendStatus("SUCCESS");
