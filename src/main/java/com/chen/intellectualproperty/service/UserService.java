@@ -31,8 +31,8 @@ public class UserService {
         user.setEmail(email);
         user.setPassword(PasswordUtils.encode(password));
         user.setNickName(nickName);
-        user.setAuthCode("");
-        user.setSmtpHost("");
+        user.setAuthCode("N/A");
+        user.setSmtpHost("N/A");
         user.setSmtpPort(0);
         userMapper.insert(user);
     }
@@ -69,11 +69,11 @@ public class UserService {
     }
 
     public User getUserByToken(String token) {
-        String userIdStr = (String) redisUtils.get(REDIS_KEY_TOKEN + token);
-        if (userIdStr == null) {
+        Object userIdObj = redisUtils.get(REDIS_KEY_TOKEN + token);
+        if (userIdObj == null) {
             throw new BusinessException("未登录或登录已过期");
         }
-        User user = userMapper.findById(Integer.parseInt(userIdStr));
+        User user = userMapper.findById(Integer.parseInt(userIdObj.toString()));
         if (user == null) {
             throw new BusinessException("用户不存在");
         }
@@ -81,11 +81,11 @@ public class UserService {
     }
 
     public UserVO getUserInfoByToken(String token) {
-        String userIdStr = (String) redisUtils.get(REDIS_KEY_TOKEN + token);
-        if (userIdStr == null) {
+        Object userIdObj = redisUtils.get(REDIS_KEY_TOKEN + token);
+        if (userIdObj == null) {
             throw new BusinessException("未登录或登录已过期");
         }
-        User user = userMapper.findById(Integer.parseInt(userIdStr));
+        User user = userMapper.findById(Integer.parseInt(userIdObj.toString()));
         if (user == null) {
             throw new BusinessException("用户不存在");
         }

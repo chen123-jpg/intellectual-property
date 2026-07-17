@@ -10,7 +10,6 @@ import com.chen.intellectualproperty.redis.RedisUtils;
 import com.chen.intellectualproperty.service.UserService;
 import com.wf.captcha.ArithmeticCaptcha;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -101,7 +100,10 @@ public class AccountController {
      * 获取当前登录用户信息
      */
     @GetMapping("/me")
-    public Result me(@RequestParam @NotEmpty String token) {
+    public Result me(@RequestParam(required = false) String token) {
+        if (token == null || token.isEmpty()) {
+            return Result.fail("请先登录");
+        }
         try {
             UserVO userVO = userService.getUserInfoByToken(token);
             return Result.success(userVO);
@@ -111,11 +113,11 @@ public class AccountController {
     }
 
     private void validateCheckCode(String checkCodeKey, String checkCode) {
-        String storedCode = (String) redisUtils.get(Constants.REDIS_KEY_CHECK_CODE + checkCodeKey);
-        if (storedCode == null) {
+        Object storedObj = redisUtils.get(Constants.REDIS_KEY_CHECK_CODE + checkCodeKey);
+        if (storedObj == null) {
             throw new BusinessException("验证码不存在或已过期");
         }
-        if (!checkCode.equalsIgnoreCase(storedCode)) {
+        if (!checkCode.equalsIgnoreCase(storedObj.toString())) {
             throw new BusinessException("验证码不匹配");
         }
     }
