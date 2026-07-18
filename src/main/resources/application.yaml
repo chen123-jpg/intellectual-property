@@ -19,11 +19,6 @@ spring:
     username: root
     password: xiaojiucheng1226
     driver-class-name: com.mysql.cj.jdbc.Driver
-  api-docs:
-    enabled: true
-    path: /v3/api-docs
-    swagger-ui:
-      enabled: true
   servlet:
     encoding:
       charset: UTF-8
@@ -58,3 +53,10 @@ logging:
   level:
     org.springframework.transaction: DEBUG
     org.springframework.jdbc.datasource: DEBUG
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
