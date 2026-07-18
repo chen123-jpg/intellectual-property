@@ -59,7 +59,7 @@ public class MailService {
         Integer smtpPort = sender.getSmtpPort();
 
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        if (smtpHost != null && smtpPort != null) {
+        if (smtpHost != null && !smtpHost.isBlank() && smtpPort != null && smtpPort > 0) {
             mailSender.setHost(smtpHost);
             mailSender.setPort(smtpPort);
         } else {

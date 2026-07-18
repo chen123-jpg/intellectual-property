@@ -3,6 +3,7 @@ package com.chen.intellectualproperty.service;
 import com.chen.intellectualproperty.exception.BusinessException;
 import com.chen.intellectualproperty.mapper.UserMapper;
 import com.chen.intellectualproperty.model.entity.User;
+import com.chen.intellectualproperty.model.enums.MailServerConfig;
 import com.chen.intellectualproperty.model.vo.UserVO;
 import com.chen.intellectualproperty.redis.RedisUtils;
 import com.chen.intellectualproperty.util.PasswordUtils;
@@ -22,7 +23,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final RedisUtils redisUtils;
 
-    public void register(String email, String password, String nickName) {
+    public void register(String email, String password, String nickName, String authCode) {
         User exist = userMapper.findByEmail(email);
         if (exist != null) {
             throw new BusinessException("邮箱已注册");
@@ -31,9 +32,17 @@ public class UserService {
         user.setEmail(email);
         user.setPassword(PasswordUtils.encode(password));
         user.setNickName(nickName);
-        user.setAuthCode("N/A");
-        user.setSmtpHost("N/A");
-        user.setSmtpPort(0);
+        user.setAuthCode(authCode != null && !authCode.isBlank() ? authCode : "N/A");
+
+        // 根据邮箱域名自动匹配SMTP配置
+        MailServerConfig mailConfig = MailServerConfig.fromEmail(email);
+        if (mailConfig != null) {
+            user.setSmtpHost(mailConfig.getHost());
+            user.setSmtpPort(mailConfig.getPort());
+        } else {
+            user.setSmtpHost("");
+            user.setSmtpPort(0);
+        }
         userMapper.insert(user);
     }
 
@@ -50,7 +59,9 @@ public class UserService {
             throw new BusinessException("密码错误");
         }
         String token = UUID.randomUUID().toString();
+        log.info("login - 存储token到Redis, key: {}, userId: {}", REDIS_KEY_TOKEN + token, user.getId().toString());
         redisUtils.set(REDIS_KEY_TOKEN + token, user.getId().toString(), REDIS_TIME_1DAY);
+        log.info("login - 存储完毕，立即验证读取: {}", redisUtils.get(REDIS_KEY_TOKEN + token));
 
         UserVO vo = new UserVO();
         vo.setId(user.getId());
@@ -69,8 +80,12 @@ public class UserService {
     }
 
     public User getUserByToken(String token) {
-        Object userIdObj = redisUtils.get(REDIS_KEY_TOKEN + token);
+        String redisKey = REDIS_KEY_TOKEN + token;
+        log.info("getUserByToken - token: [{}], redisKey: [{}]", token, redisKey);
+        Object userIdObj = redisUtils.get(redisKey);
+        log.info("getUserByToken - redis result: {}", userIdObj);
         if (userIdObj == null) {
+            log.warn("getUserByToken - Redis中未找到该key: {}", redisKey);
             throw new BusinessException("未登录或登录已过期");
         }
         User user = userMapper.findById(Integer.parseInt(userIdObj.toString()));

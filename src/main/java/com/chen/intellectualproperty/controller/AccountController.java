@@ -60,7 +60,7 @@ public class AccountController {
         log.info("注册请求 - email: {}, nickName: {}", dto.getEmail(), dto.getNickName());
         try {
             validateCheckCode(dto.getCheckCodeKey(), dto.getCheckCode());
-            userService.register(dto.getEmail(), dto.getPassword(), dto.getNickName());
+            userService.register(dto.getEmail(), dto.getPassword(), dto.getNickName(), dto.getAuthCode());
             log.info("注册成功 - email: {}", dto.getEmail());
             return Result.successMsg("注册成功");
         } catch (BusinessException e) {

@@ -6,12 +6,14 @@ import com.chen.intellectualproperty.service.UserService;
 import com.chen.intellectualproperty.service.impl.MailService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Collections;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/mail")
 @RequiredArgsConstructor
@@ -22,6 +24,7 @@ public class MailController {
 
     @PostMapping("/send")
     public ResponseEntity<?> sendMail(@RequestParam String token, @ModelAttribute MailRequest request) {
+        log.info("sendMail - 接收token: [{}], to: {}, subject: {}", token, request.getTo(), request.getSubject());
         try {
             User sender = userService.getUserByToken(token);
             mailService.sendMail(sender, request.getTo(), request.getSubject(),

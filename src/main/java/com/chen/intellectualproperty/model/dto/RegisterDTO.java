@@ -1,5 +1,6 @@
 package com.chen.intellectualproperty.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
@@ -11,4 +12,5 @@ public class RegisterDTO {
     @NotEmpty @Email String email;
     @NotEmpty String password;
     @NotEmpty String nickName;
+    String authCode;
 }
