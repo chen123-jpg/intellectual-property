@@ -1,10 +1,16 @@
 package com.chen.intellectualproperty.controller;
 
+import com.chen.intellectualproperty.exception.BusinessException;
 import com.chen.intellectualproperty.model.dto.*;
 import com.chen.intellectualproperty.model.entity.*;
+import com.chen.intellectualproperty.model.enums.EmployeeRoleCode;
 import com.chen.intellectualproperty.model.query.PatentDisclosureQuery;
+import com.chen.intellectualproperty.model.vo.SessionUserVO;
+import com.chen.intellectualproperty.service.AuthSessionService;
 import com.chen.intellectualproperty.service.DisclosureWorkflowService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,8 +18,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 交底流程接口
- * <p>路径前缀 /api/disclosure-workflow</p>
+ * 交底流程接口（按员工类型鉴权）
+ * <p>
+ * ENTRY 录入 | SPONSOR 主办本人 | PROCESS 流程确认/定稿待报 | ADMIN 全部
+ * </p>
  */
 @RestController
 @RequestMapping("/api/disclosure-workflow")
@@ -21,154 +29,263 @@ import java.util.Map;
 public class DisclosureWorkflowController {
 
     private final DisclosureWorkflowService workflowService;
+    private final ObjectMapper objectMapper;
+    private final AuthSessionService authSessionService;
 
     // ---------- 交底主数据 ----------
 
-    /** 录入交底（同步写缴费表、开票表） */
-    @PostMapping("/disclosures")
-    public Result<PatentDisclosure> create(@RequestBody DisclosureCreateDTO dto) {
+    @PostMapping(value = "/disclosures", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Result<PatentDisclosure> create(@RequestParam String token, @RequestBody DisclosureCreateDTO dto) {
         try {
+            authSessionService.requireAnyRole(token, EmployeeRoleCode.ENTRY, EmployeeRoleCode.ADMIN);
             return Result.success(workflowService.createDisclosure(dto));
-        } catch (IllegalArgumentException e) {
+        } catch (BusinessException | IllegalArgumentException e) {
             return Result.fail(e.getMessage());
         }
     }
 
-    /** 复制历史交底 */
+    @PostMapping(value = "/disclosures/with-attachments", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Result<PatentDisclosure> createWithAttachments(
+            @RequestParam String token,
+            @RequestParam("data") String dataJson,
+            @RequestParam("disclosureDoc") MultipartFile disclosureDoc,
+            @RequestParam(value = "otherFiles", required = false) MultipartFile[] otherFiles) {
+        try {
+            SessionUserVO session = authSessionService.requireAnyRole(
+                    token, EmployeeRoleCode.ENTRY, EmployeeRoleCode.ADMIN);
+            DisclosureCreateDTO dto = objectMapper.readValue(dataJson, DisclosureCreateDTO.class);
+            if (dto.getDisclosure() != null) {
+                if (dto.getDisclosure().getEntryUserId() == null) {
+                    dto.getDisclosure().setEntryUserId(session.getUserId() == null ? null : session.getUserId().longValue());
+                }
+                if (dto.getDisclosure().getEntryUserName() == null || dto.getDisclosure().getEntryUserName().isBlank()) {
+                    dto.getDisclosure().setEntryUserName(
+                            session.getEmployeeName() != null ? session.getEmployeeName() : session.getNickName());
+                }
+            }
+            Long uid = session.getUserId() == null ? null : session.getUserId().longValue();
+            String uname = session.getEmployeeName() != null ? session.getEmployeeName() : session.getNickName();
+            return Result.success(workflowService.createDisclosureWithAttachments(
+                    dto, disclosureDoc, otherFiles, uid, uname));
+        } catch (BusinessException | IllegalArgumentException | IllegalStateException e) {
+            return Result.fail(e.getMessage());
+        } catch (Exception e) {
+            return Result.fail("录入失败: " + e.getMessage());
+        }
+    }
+
     @PostMapping("/disclosures/copy")
-    public Result<PatentDisclosure> copy(@RequestBody DisclosureCopyDTO dto) {
+    public Result<PatentDisclosure> copy(@RequestParam String token, @RequestBody DisclosureCopyDTO dto) {
         try {
+            authSessionService.requireAnyRole(token, EmployeeRoleCode.ENTRY, EmployeeRoleCode.ADMIN);
             return Result.success(workflowService.copyDisclosure(dto));
-        } catch (IllegalArgumentException e) {
+        } catch (BusinessException | IllegalArgumentException e) {
             return Result.fail(e.getMessage());
         }
     }
 
-    /** 更新交底（主办处理中可改字段） */
     @PutMapping("/disclosures/{id}")
-    public Result<PatentDisclosure> update(@PathVariable Long id, @RequestBody PatentDisclosure body) {
+    public Result<PatentDisclosure> update(@RequestParam String token,
+                                           @PathVariable Long id,
+                                           @RequestBody PatentDisclosure body) {
         try {
+            SessionUserVO session = authSessionService.requireActiveEmployee(token);
+            PatentDisclosure exist = loadDisclosure(id);
+            assertCanViewOrEdit(session, exist, true);
             return Result.success(workflowService.updateDisclosure(id, body));
-        } catch (IllegalArgumentException e) {
+        } catch (BusinessException | IllegalArgumentException e) {
             return Result.fail(e.getMessage());
         }
     }
 
-    /** 组合查询 */
     @PostMapping("/disclosures/search")
-    public Result<List<PatentDisclosure>> search(@RequestBody(required = false) PatentDisclosureQuery query) {
-        return Result.success(workflowService.search(query));
-    }
-
-    /** 主办人：我的交底 */
-    @GetMapping("/disclosures/by-sponsor/{sponsorUserId}")
-    public Result<List<PatentDisclosure>> bySponsor(@PathVariable Long sponsorUserId) {
-        return Result.success(workflowService.listBySponsorUserId(sponsorUserId));
-    }
-
-    /** 交底详情（含附件/申请包/缴费/开票/状态日志/邮件） */
-    @GetMapping("/disclosures/{id}")
-    public Result<Map<String, Object>> detail(@PathVariable Long id) {
+    public Result<List<PatentDisclosure>> search(@RequestParam String token,
+                                                 @RequestBody(required = false) PatentDisclosureQuery query) {
         try {
-            return Result.success(workflowService.detail(id));
-        } catch (IllegalArgumentException e) {
+            SessionUserVO session = authSessionService.requireActiveEmployee(token);
+            if (query == null) {
+                query = new PatentDisclosureQuery();
+            }
+            // 纯主办人：强制只看自己的
+            if (isSponsorOnly(session)) {
+                query.setSponsorUserId(session.getUserId() == null ? -1L : session.getUserId().longValue());
+            }
+            return Result.success(workflowService.search(query));
+        } catch (BusinessException e) {
             return Result.fail(e.getMessage());
         }
     }
 
-    /** 修改交底状态；若目标为定稿待报则校验申请包并同步 P 表 */
-    @PostMapping("/disclosures/{id}/status")
-    public Result<?> changeStatus(@PathVariable Long id, @RequestBody StatusChangeDTO dto) {
+    @GetMapping("/disclosures/by-sponsor/{sponsorUserId}")
+    public Result<List<PatentDisclosure>> bySponsor(@RequestParam String token,
+                                                    @PathVariable Long sponsorUserId) {
         try {
-            if (dto != null && ("12".equals(dto.getToStatus())
-                    || "定稿待报".equals(dto.getToStatus()))) {
+            SessionUserVO session = authSessionService.requireActiveEmployee(token);
+            if (isSponsorOnly(session)) {
+                sponsorUserId = session.getUserId() == null ? -1L : session.getUserId().longValue();
+            } else {
+                authSessionService.requireAnyRole(token,
+                        EmployeeRoleCode.SPONSOR, EmployeeRoleCode.ENTRY,
+                        EmployeeRoleCode.PROCESS, EmployeeRoleCode.ADMIN);
+            }
+            return Result.success(workflowService.listBySponsorUserId(sponsorUserId));
+        } catch (BusinessException e) {
+            return Result.fail(e.getMessage());
+        }
+    }
+
+    @GetMapping("/disclosures/{id}")
+    public Result<Map<String, Object>> detail(@RequestParam String token, @PathVariable Long id) {
+        try {
+            SessionUserVO session = authSessionService.requireActiveEmployee(token);
+            PatentDisclosure exist = loadDisclosure(id);
+            assertCanViewOrEdit(session, exist, false);
+            return Result.success(workflowService.detail(id));
+        } catch (BusinessException | IllegalArgumentException e) {
+            return Result.fail(e.getMessage());
+        }
+    }
+
+    @PostMapping("/disclosures/{id}/status")
+    public Result<?> changeStatus(@RequestParam String token,
+                                  @PathVariable Long id,
+                                  @RequestBody StatusChangeDTO dto) {
+        try {
+            SessionUserVO session = authSessionService.requireActiveEmployee(token);
+            PatentDisclosure exist = loadDisclosure(id);
+            boolean pending = dto != null && ("12".equals(dto.getToStatus()) || "定稿待报".equals(dto.getToStatus()));
+            if (pending) {
+                authSessionService.requireAnyRole(token, EmployeeRoleCode.PROCESS, EmployeeRoleCode.ADMIN);
+            } else {
+                // 主办改状态（处理过程）
+                if (!session.isAdmin()) {
+                    authSessionService.requireAnyRole(token, EmployeeRoleCode.SPONSOR);
+                    authSessionService.requireSponsorOf(session, exist.getSponsorUserId());
+                }
+            }
+            fillOperator(dto, session);
+            if (pending) {
                 return Result.success(workflowService.markPendingReportAndSync(id, dto));
             }
             return Result.success(workflowService.changeStatus(id, dto));
-        } catch (IllegalArgumentException | IllegalStateException e) {
+        } catch (BusinessException | IllegalArgumentException | IllegalStateException e) {
             return Result.fail(e.getMessage());
         }
     }
 
-    /** 明确：定稿待报 + 同步申请专利表 */
     @PostMapping("/disclosures/{id}/pending-report")
-    public Result<Map<String, Object>> pendingReport(@PathVariable Long id,
+    public Result<Map<String, Object>> pendingReport(@RequestParam String token,
+                                                     @PathVariable Long id,
                                                      @RequestBody(required = false) StatusChangeDTO dto) {
         try {
+            SessionUserVO session = authSessionService.requireAnyRole(
+                    token, EmployeeRoleCode.PROCESS, EmployeeRoleCode.ADMIN);
+            if (dto == null) {
+                dto = new StatusChangeDTO();
+            }
+            fillOperator(dto, session);
             return Result.success(workflowService.markPendingReportAndSync(id, dto));
-        } catch (IllegalArgumentException | IllegalStateException e) {
+        } catch (BusinessException | IllegalArgumentException | IllegalStateException e) {
             return Result.fail(e.getMessage());
         }
     }
 
     // ---------- 附件 ----------
 
-    /**
-     * 上传交底附件
-     * @param bizType DISCLOSURE_DOC（交底书 Word） / DISCLOSURE_OTHER
-     */
     @PostMapping("/disclosures/{id}/attachments")
     public Result<DisclosureAttachment> uploadAttachment(
+            @RequestParam String token,
             @PathVariable Long id,
             @RequestParam("file") MultipartFile file,
-            @RequestParam(value = "bizType", defaultValue = "DISCLOSURE_OTHER") String bizType,
-            @RequestParam(value = "uploadUserId", required = false) Long uploadUserId,
-            @RequestParam(value = "uploadUserName", required = false) String uploadUserName) {
+            @RequestParam(value = "bizType", defaultValue = "DISCLOSURE_OTHER") String bizType) {
         try {
-            return Result.success(workflowService.uploadAttachment(id, bizType, file, uploadUserId, uploadUserName));
-        } catch (IllegalArgumentException | IllegalStateException e) {
+            SessionUserVO session = authSessionService.requireActiveEmployee(token);
+            PatentDisclosure exist = loadDisclosure(id);
+            // 录入或主办（本人）或管理
+            if (!session.isAdmin()
+                    && !authSessionService.hasAnyRole(session, EmployeeRoleCode.ENTRY)
+                    && !authSessionService.hasAnyRole(session, EmployeeRoleCode.SPONSOR)) {
+                throw new BusinessException("无权上传附件");
+            }
+            if (authSessionService.hasAnyRole(session, EmployeeRoleCode.SPONSOR)
+                    && !session.isAdmin()
+                    && !authSessionService.hasAnyRole(session, EmployeeRoleCode.ENTRY)) {
+                authSessionService.requireSponsorOf(session, exist.getSponsorUserId());
+            }
+            Long uid = session.getUserId() == null ? null : session.getUserId().longValue();
+            String uname = session.getEmployeeName() != null ? session.getEmployeeName() : session.getNickName();
+            return Result.success(workflowService.uploadAttachment(id, bizType, file, uid, uname));
+        } catch (BusinessException | IllegalArgumentException | IllegalStateException e) {
             return Result.fail(e.getMessage());
         }
     }
 
     @GetMapping("/disclosures/{id}/attachments")
-    public Result<List<DisclosureAttachment>> listAttachments(@PathVariable Long id) {
-        return Result.success(workflowService.listAttachments(id));
-    }
-
-    @DeleteMapping("/attachments/{attachmentId}")
-    public Result<?> deleteAttachment(@PathVariable Long attachmentId) {
+    public Result<List<DisclosureAttachment>> listAttachments(@RequestParam String token, @PathVariable Long id) {
         try {
-            workflowService.deleteAttachment(attachmentId);
-            return Result.success(null);
-        } catch (IllegalArgumentException e) {
+            SessionUserVO session = authSessionService.requireActiveEmployee(token);
+            assertCanViewOrEdit(session, loadDisclosure(id), false);
+            return Result.success(workflowService.listAttachments(id));
+        } catch (BusinessException | IllegalArgumentException e) {
             return Result.fail(e.getMessage());
         }
     }
 
-    // ---------- 申请包（XML / 五书 分条目） ----------
+    @DeleteMapping("/attachments/{attachmentId}")
+    public Result<?> deleteAttachment(@RequestParam String token, @PathVariable Long attachmentId) {
+        try {
+            SessionUserVO session = authSessionService.requireAnyRole(
+                    token, EmployeeRoleCode.ENTRY, EmployeeRoleCode.SPONSOR, EmployeeRoleCode.ADMIN);
+            workflowService.deleteAttachment(attachmentId);
+            return Result.success(null);
+        } catch (BusinessException | IllegalArgumentException | IllegalStateException e) {
+            return Result.fail(e.getMessage());
+        }
+    }
 
-    /**
-     * 上传申请包
-     * @param packageType XML_PACKAGE 或 FIVE_BOOKS_WORD
-     */
+    // ---------- 申请包 ----------
+
     @PostMapping("/disclosures/{id}/packages")
     public Result<ApplicationPackage> uploadPackage(
+            @RequestParam String token,
             @PathVariable Long id,
             @RequestParam("file") MultipartFile file,
-            @RequestParam("packageType") String packageType,
-            @RequestParam(value = "uploadUserId", required = false) Long uploadUserId,
-            @RequestParam(value = "uploadUserName", required = false) String uploadUserName) {
+            @RequestParam("packageType") String packageType) {
         try {
-            return Result.success(workflowService.uploadPackage(id, packageType, file, uploadUserId, uploadUserName));
-        } catch (IllegalArgumentException | IllegalStateException e) {
+            SessionUserVO session = authSessionService.requireAnyRole(
+                    token, EmployeeRoleCode.SPONSOR, EmployeeRoleCode.ADMIN);
+            PatentDisclosure exist = loadDisclosure(id);
+            authSessionService.requireSponsorOf(session, exist.getSponsorUserId());
+            Long uid = session.getUserId() == null ? null : session.getUserId().longValue();
+            String uname = session.getEmployeeName() != null ? session.getEmployeeName() : session.getNickName();
+            return Result.success(workflowService.uploadPackage(id, packageType, file, uid, uname));
+        } catch (BusinessException | IllegalArgumentException | IllegalStateException e) {
             return Result.fail(e.getMessage());
         }
     }
 
     @GetMapping("/disclosures/{id}/packages")
-    public Result<List<ApplicationPackage>> listPackages(@PathVariable Long id) {
-        return Result.success(workflowService.listPackages(id));
+    public Result<List<ApplicationPackage>> listPackages(@RequestParam String token, @PathVariable Long id) {
+        try {
+            SessionUserVO session = authSessionService.requireActiveEmployee(token);
+            assertCanViewOrEdit(session, loadDisclosure(id), false);
+            return Result.success(workflowService.listPackages(id));
+        } catch (BusinessException | IllegalArgumentException e) {
+            return Result.fail(e.getMessage());
+        }
     }
 
     @PostMapping("/packages/{packageId}/confirm")
     public Result<ApplicationPackage> confirmPackage(
-            @PathVariable Long packageId,
-            @RequestParam(value = "confirmUserId", required = false) Long confirmUserId,
-            @RequestParam(value = "confirmUserName", required = false) String confirmUserName) {
+            @RequestParam String token,
+            @PathVariable Long packageId) {
         try {
-            return Result.success(workflowService.confirmPackage(packageId, confirmUserId, confirmUserName));
-        } catch (IllegalArgumentException e) {
+            SessionUserVO session = authSessionService.requireAnyRole(
+                    token, EmployeeRoleCode.PROCESS, EmployeeRoleCode.ADMIN);
+            Long uid = session.getUserId() == null ? null : session.getUserId().longValue();
+            String uname = session.getEmployeeName() != null ? session.getEmployeeName() : session.getNickName();
+            return Result.success(workflowService.confirmPackage(packageId, uid, uname));
+        } catch (BusinessException | IllegalArgumentException e) {
             return Result.fail(e.getMessage());
         }
     }
@@ -176,49 +293,148 @@ public class DisclosureWorkflowController {
     // ---------- 邮件 ----------
 
     @GetMapping("/mail-templates")
-    public Result<List<MailTemplate>> mailTemplates() {
-        return Result.success(workflowService.listMailTemplates());
-    }
-
-    @GetMapping("/mail-templates/{code}/preview")
-    public Result<MailTemplate> previewTemplate(@PathVariable("code") String code,
-                                                @RequestParam Long disclosureId) {
+    public Result<List<MailTemplate>> mailTemplates(@RequestParam String token) {
         try {
-            return Result.success(workflowService.previewTemplate(code, disclosureId));
-        } catch (IllegalArgumentException e) {
+            authSessionService.requireAnyRole(token,
+                    EmployeeRoleCode.SPONSOR, EmployeeRoleCode.ENTRY, EmployeeRoleCode.ADMIN, EmployeeRoleCode.PROCESS);
+            return Result.success(workflowService.listMailTemplates());
+        } catch (BusinessException e) {
             return Result.fail(e.getMessage());
         }
     }
 
-    /** 读模板可改内容，附件 ID 可增删后发送 */
-    @PostMapping("/mail/send")
-    public Result<MailSendLog> sendMail(@RequestBody MailSendDTO dto) {
+    @GetMapping("/mail-templates/{code}/preview")
+    public Result<MailTemplate> previewTemplate(@RequestParam String token,
+                                                @PathVariable("code") String code,
+                                                @RequestParam Long disclosureId) {
         try {
+            SessionUserVO session = authSessionService.requireAnyRole(
+                    token, EmployeeRoleCode.SPONSOR, EmployeeRoleCode.ADMIN);
+            PatentDisclosure exist = loadDisclosure(disclosureId);
+            authSessionService.requireSponsorOf(session, exist.getSponsorUserId());
+            return Result.success(workflowService.previewTemplate(code, disclosureId));
+        } catch (BusinessException | IllegalArgumentException e) {
+            return Result.fail(e.getMessage());
+        }
+    }
+
+    @PostMapping("/mail/send")
+    public Result<MailSendLog> sendMail(@RequestParam String token, @RequestBody MailSendDTO dto) {
+        try {
+            SessionUserVO session = authSessionService.requireAnyRole(
+                    token, EmployeeRoleCode.SPONSOR, EmployeeRoleCode.ADMIN);
+            if (dto == null || dto.getDisclosureId() == null) {
+                throw new IllegalArgumentException("disclosureId 不能为空");
+            }
+            PatentDisclosure exist = loadDisclosure(dto.getDisclosureId());
+            authSessionService.requireSponsorOf(session, exist.getSponsorUserId());
+            dto.setSenderUserId(session.getUserId() == null ? null : session.getUserId().longValue());
+            dto.setSenderName(session.getEmployeeName() != null ? session.getEmployeeName() : session.getNickName());
             return Result.success(workflowService.sendMail(dto));
-        } catch (IllegalArgumentException | IllegalStateException e) {
+        } catch (BusinessException | IllegalArgumentException | IllegalStateException e) {
             return Result.fail(e.getMessage());
         }
     }
 
     @GetMapping("/disclosures/{id}/mail-logs")
-    public Result<List<MailSendLog>> mailLogs(@PathVariable Long id) {
-        return Result.success(workflowService.listMailLogs(id));
+    public Result<List<MailSendLog>> mailLogs(@RequestParam String token, @PathVariable Long id) {
+        try {
+            SessionUserVO session = authSessionService.requireActiveEmployee(token);
+            assertCanViewOrEdit(session, loadDisclosure(id), false);
+            return Result.success(workflowService.listMailLogs(id));
+        } catch (BusinessException | IllegalArgumentException e) {
+            return Result.fail(e.getMessage());
+        }
     }
 
-    // ---------- 缴费 / 开票 / 状态日志 ----------
+    // ---------- 附属 ----------
 
     @GetMapping("/disclosures/{id}/fees")
-    public Result<List<FeePayment>> fees(@PathVariable Long id) {
-        return Result.success(workflowService.listFees(id));
+    public Result<List<FeePayment>> fees(@RequestParam String token, @PathVariable Long id) {
+        try {
+            SessionUserVO session = authSessionService.requireActiveEmployee(token);
+            assertCanViewOrEdit(session, loadDisclosure(id), false);
+            return Result.success(workflowService.listFees(id));
+        } catch (BusinessException | IllegalArgumentException e) {
+            return Result.fail(e.getMessage());
+        }
     }
 
     @GetMapping("/disclosures/{id}/invoices")
-    public Result<List<Invoice>> invoices(@PathVariable Long id) {
-        return Result.success(workflowService.listInvoices(id));
+    public Result<List<Invoice>> invoices(@RequestParam String token, @PathVariable Long id) {
+        try {
+            SessionUserVO session = authSessionService.requireActiveEmployee(token);
+            assertCanViewOrEdit(session, loadDisclosure(id), false);
+            return Result.success(workflowService.listInvoices(id));
+        } catch (BusinessException | IllegalArgumentException e) {
+            return Result.fail(e.getMessage());
+        }
     }
 
     @GetMapping("/disclosures/{id}/status-logs")
-    public Result<List<DisclosureStatusLog>> statusLogs(@PathVariable Long id) {
-        return Result.success(workflowService.listStatusLogs(id));
+    public Result<List<DisclosureStatusLog>> statusLogs(@RequestParam String token, @PathVariable Long id) {
+        try {
+            SessionUserVO session = authSessionService.requireActiveEmployee(token);
+            assertCanViewOrEdit(session, loadDisclosure(id), false);
+            return Result.success(workflowService.listStatusLogs(id));
+        } catch (BusinessException | IllegalArgumentException e) {
+            return Result.fail(e.getMessage());
+        }
+    }
+
+    // ---------- helpers ----------
+
+    private PatentDisclosure loadDisclosure(Long id) {
+        Map<String, Object> detail = workflowService.detail(id);
+        Object d = detail.get("disclosure");
+        if (!(d instanceof PatentDisclosure)) {
+            throw new IllegalArgumentException("交底不存在: " + id);
+        }
+        return (PatentDisclosure) d;
+    }
+
+    /** 仅主办（无录入/流程/管理） */
+    private boolean isSponsorOnly(SessionUserVO s) {
+        if (s == null || s.isAdmin()) {
+            return false;
+        }
+        boolean sponsor = authSessionService.hasAnyRole(s, EmployeeRoleCode.SPONSOR);
+        boolean other = authSessionService.hasAnyRole(s, EmployeeRoleCode.ENTRY, EmployeeRoleCode.PROCESS);
+        return sponsor && !other;
+    }
+
+    /**
+     * @param edit true=改主数据：录入/主办本人/管理；false=查看：录入/流程/主办本人/管理
+     */
+    private void assertCanViewOrEdit(SessionUserVO session, PatentDisclosure d, boolean edit) {
+        if (session.isAdmin()) {
+            return;
+        }
+        if (authSessionService.hasAnyRole(session, EmployeeRoleCode.ENTRY, EmployeeRoleCode.PROCESS)) {
+            if (edit && !authSessionService.hasAnyRole(session, EmployeeRoleCode.ENTRY, EmployeeRoleCode.SPONSOR)) {
+                // 纯流程不可改主数据
+                if (!authSessionService.hasAnyRole(session, EmployeeRoleCode.ENTRY)) {
+                    throw new BusinessException("流程人员不可修改交底主数据");
+                }
+            }
+            return;
+        }
+        if (authSessionService.hasAnyRole(session, EmployeeRoleCode.SPONSOR)) {
+            authSessionService.requireSponsorOf(session, d.getSponsorUserId());
+            return;
+        }
+        throw new BusinessException("无权访问该交底");
+    }
+
+    private void fillOperator(StatusChangeDTO dto, SessionUserVO session) {
+        if (dto == null) {
+            return;
+        }
+        if (dto.getOperatorUserId() == null && session.getUserId() != null) {
+            dto.setOperatorUserId(session.getUserId().longValue());
+        }
+        if (dto.getOperatorName() == null || dto.getOperatorName().isBlank()) {
+            dto.setOperatorName(session.getEmployeeName() != null ? session.getEmployeeName() : session.getNickName());
+        }
     }
 }

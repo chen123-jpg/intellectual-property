@@ -18,6 +18,16 @@ public interface DisclosureWorkflowService {
 
     PatentDisclosure createDisclosure(DisclosureCreateDTO dto);
 
+    /**
+     * 录入交底并强制上传交底书（Word），可附带其他附件。
+     * 同事务：主表 + 缴费/开票 + 附件。
+     */
+    PatentDisclosure createDisclosureWithAttachments(DisclosureCreateDTO dto,
+                                                     MultipartFile disclosureDoc,
+                                                     MultipartFile[] otherFiles,
+                                                     Long uploadUserId,
+                                                     String uploadUserName);
+
     PatentDisclosure copyDisclosure(DisclosureCopyDTO dto);
 
     PatentDisclosure updateDisclosure(Long id, PatentDisclosure record);

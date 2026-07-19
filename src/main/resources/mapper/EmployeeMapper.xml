@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chen.intellectualproperty.mapper.EmployeeMapper">
+
+    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.model.entity.Employee">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="emp_no" property="empNo"/>
+        <result column="name" property="name"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="department" property="department"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, user_id, emp_no, name, email, phone, department, status, remark, create_time, update_time
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO employee (user_id, emp_no, name, email, phone, department, status, remark, create_time, update_time)
+        VALUES (#{userId}, #{empNo}, #{name}, #{email}, #{phone}, #{department},
+                IFNULL(#{status}, 'ACTIVE'), #{remark}, NOW(), NOW())
+    </insert>
+
+    <update id="updateById">
+        UPDATE employee
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="empNo != null">emp_no = #{empNo},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="department != null">department = #{department},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM employee WHERE id = #{id}
+    </select>
+
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM employee WHERE user_id = #{userId} LIMIT 1
+    </select>
+
+    <select id="selectByEmail" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM employee WHERE email = #{email} LIMIT 1
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT DISTINCT e.id, e.user_id, e.emp_no, e.name, e.email, e.phone, e.department,
+               e.status, e.remark, e.create_time, e.update_time
+        FROM employee e
+        <if test="typeCode != null and typeCode != ''">
+            INNER JOIN employee_type_rel r ON r.employee_id = e.id AND r.type_code = #{typeCode}
+        </if>
+        <where>
+            <if test="status != null and status != ''">AND e.status = #{status}</if>
+            <if test="keyword != null and keyword != ''">
+                AND (
+                    e.name LIKE CONCAT('%', #{keyword}, '%')
+                    OR e.email LIKE CONCAT('%', #{keyword}, '%')
+                    OR e.emp_no LIKE CONCAT('%', #{keyword}, '%')
+                    OR e.phone LIKE CONCAT('%', #{keyword}, '%')
+                    OR e.department LIKE CONCAT('%', #{keyword}, '%')
+                )
+            </if>
+        </where>
+        ORDER BY e.id DESC
+    </select>
+
+    <select id="selectByTypeCode" resultMap="BaseResultMap">
+        SELECT e.id, e.user_id, e.emp_no, e.name, e.email, e.phone, e.department,
+               e.status, e.remark, e.create_time, e.update_time
+        FROM employee e
+        INNER JOIN employee_type_rel r ON r.employee_id = e.id AND r.type_code = #{typeCode}
+        WHERE e.status = 'ACTIVE'
+        ORDER BY e.name ASC, e.id ASC
+    </select>
+</mapper>

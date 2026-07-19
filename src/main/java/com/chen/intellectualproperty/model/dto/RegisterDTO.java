@@ -13,4 +13,9 @@ public class RegisterDTO {
     @NotEmpty String password;
     @NotEmpty String nickName;
     String authCode;
+    /**
+     * 注册时选择的员工类型编码（可多选），如 ENTRY/SPONSOR/PROCESS。
+     * 为空时默认 ENTRY。
+     */
+    java.util.List<String> roleCodes;
 }

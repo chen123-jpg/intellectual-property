@@ -7,7 +7,8 @@
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| POST | `/disclosures` | 录入交底，同步写缴费表+开票表 |
+| POST | `/disclosures/with-attachments` | **推荐** 录入交底（multipart 强制交底书 Word + 可选其他附件），同步写缴费表+开票表 |
+| POST | `/disclosures` | 纯 JSON 录入（已禁用，会返回错误，请用 with-attachments） |
 | POST | `/disclosures/copy` | 复制历史交底 |
 | PUT | `/disclosures/{id}` | 更新交底 |
 | POST | `/disclosures/search` | 组合查询 |
@@ -16,11 +17,13 @@
 | POST | `/disclosures/{id}/status` | 改状态；目标 12/定稿待报 时走同步 |
 | POST | `/disclosures/{id}/pending-report` | 定稿待报并同步 P 表 |
 
-### 录入示例
+### 录入示例（强制交底书）
 
-```json
-POST /api/disclosure-workflow/disclosures
-{
+```http
+POST /api/disclosure-workflow/disclosures/with-attachments
+Content-Type: multipart/form-data
+
+data: {
   "autoGenerateNo": true,
   "disclosure": {
     "disclosureName": "一种测试方法",
@@ -34,6 +37,8 @@ POST /api/disclosure-workflow/disclosures
     "patentType": "发明"
   }
 }
+disclosureDoc: （必填 .doc/.docx）
+otherFiles: （可选，可多个）
 ```
 
 ### 改状态

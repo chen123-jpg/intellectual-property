@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chen.intellectualproperty.mapper.EmployeeTypeRelMapper">
+
+    <resultMap id="BaseResultMap" type="com.chen.intellectualproperty.model.entity.EmployeeTypeRel">
+        <id column="id" property="id"/>
+        <result column="employee_id" property="employeeId"/>
+        <result column="type_code" property="typeCode"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO employee_type_rel (employee_id, type_code, create_time)
+        VALUES (#{employeeId}, #{typeCode}, NOW())
+    </insert>
+
+    <delete id="deleteByEmployeeId">
+        DELETE FROM employee_type_rel WHERE employee_id = #{employeeId}
+    </delete>
+
+    <select id="selectTypeCodesByEmployeeId" resultType="java.lang.String">
+        SELECT type_code FROM employee_type_rel WHERE employee_id = #{employeeId} ORDER BY id ASC
+    </select>
+
+    <select id="selectByEmployeeId" resultMap="BaseResultMap">
+        SELECT id, employee_id, type_code, create_time
+        FROM employee_type_rel WHERE employee_id = #{employeeId} ORDER BY id ASC
+    </select>
+</mapper>

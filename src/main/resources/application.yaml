@@ -13,12 +13,12 @@ spring:
   profiles:
     active: remote
 
-  datasource:
-    # 默认占位，会被 profile 覆盖
-    url: "jdbc:mysql://127.0.0.1:3306/intellectual-property?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&charset=utf8mb4"
-    username: root
-    password: xiaojiucheng1226
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  spring:
+    datasource:
+      url: "jdbc:mysql://47.109.39.226:3306/intellectual-property?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&charset=utf8mb4"
+      username: root
+      password: 060803
+      driver-class-name: com.mysql.cj.jdbc.Driver
   servlet:
     encoding:
       charset: UTF-8

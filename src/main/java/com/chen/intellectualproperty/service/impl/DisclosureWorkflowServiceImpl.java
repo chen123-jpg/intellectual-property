@@ -68,9 +68,30 @@ public class DisclosureWorkflowServiceImpl implements DisclosureWorkflowService 
     @Override
     @Transactional
     public PatentDisclosure createDisclosure(DisclosureCreateDTO dto) {
+        // 纯 JSON 录入不带交底书：禁止，必须走 with-attachments
+        throw new IllegalArgumentException(
+                "录入交底必须上传交底书（Word）。请使用 POST /disclosures/with-attachments（multipart：data + disclosureDoc）");
+    }
+
+    @Override
+    @Transactional
+    public PatentDisclosure createDisclosureWithAttachments(DisclosureCreateDTO dto,
+                                                            MultipartFile disclosureDoc,
+                                                            MultipartFile[] otherFiles,
+                                                            Long uploadUserId,
+                                                            String uploadUserName) {
         if (dto == null || dto.getDisclosure() == null) {
             throw new IllegalArgumentException("交底信息不能为空");
         }
+        if (disclosureDoc == null || disclosureDoc.isEmpty()) {
+            throw new IllegalArgumentException("交底书（Word）不能为空");
+        }
+        String original = disclosureDoc.getOriginalFilename() == null ? "disclosure.docx" : disclosureDoc.getOriginalFilename();
+        String ext = extensionOf(original);
+        if (!isWordExt(ext)) {
+            throw new IllegalArgumentException("交底书必须是 Word 文件（.doc/.docx）");
+        }
+
         PatentDisclosure record = dto.getDisclosure();
         boolean auto = dto.getAutoGenerateNo() == null || Boolean.TRUE.equals(dto.getAutoGenerateNo());
         fillNumbers(record, auto);
@@ -86,7 +107,18 @@ public class DisclosureWorkflowServiceImpl implements DisclosureWorkflowService 
         patentDisclosureMapper.insert(record);
         syncFeeAndInvoice(record);
         writeStatusLog(record.getId(), null, record.getPatentStatus(),
-                record.getEntryUserId(), record.getEntryUserName(), "录入交底");
+                record.getEntryUserId(), record.getEntryUserName(), "录入交底（含交底书）");
+
+        // 交底书
+        uploadAttachment(record.getId(), BIZ_DISCLOSURE_DOC, disclosureDoc, uploadUserId, uploadUserName);
+        // 其他附件
+        if (otherFiles != null) {
+            for (MultipartFile f : otherFiles) {
+                if (f != null && !f.isEmpty()) {
+                    uploadAttachment(record.getId(), BIZ_DISCLOSURE_OTHER, f, uploadUserId, uploadUserName);
+                }
+            }
+        }
         return patentDisclosureMapper.selectById(record.getId());
     }
 
@@ -186,6 +218,7 @@ public class DisclosureWorkflowServiceImpl implements DisclosureWorkflowService 
             throw new IllegalArgumentException("toStatus 不能为空");
         }
         PatentDisclosure exist = requireDisclosure(id);
+        assertHasDisclosureDoc(id);
         String from = exist.getPatentStatus();
         String to = normalizeStatus(dto.getToStatus());
 
@@ -255,6 +288,16 @@ public class DisclosureWorkflowServiceImpl implements DisclosureWorkflowService 
         DisclosureAttachment att = disclosureAttachmentMapper.selectById(attachmentId);
         if (att == null) {
             throw new IllegalArgumentException("附件不存在");
+        }
+        // 不允许删除最后一份交底书
+        if (BIZ_DISCLOSURE_DOC.equals(att.getBizType())
+                && (att.getDeleted() == null || att.getDeleted() == 0)) {
+            long docCount = disclosureAttachmentMapper.selectByDisclosureId(att.getDisclosureId()).stream()
+                    .filter(a -> BIZ_DISCLOSURE_DOC.equals(a.getBizType()))
+                    .count();
+            if (docCount <= 1) {
+                throw new IllegalStateException("至少保留一份交底书（Word），请先上传新交底书再删除旧文件");
+            }
         }
         disclosureAttachmentMapper.logicalDelete(attachmentId);
     }
@@ -336,6 +379,7 @@ public class DisclosureWorkflowServiceImpl implements DisclosureWorkflowService 
     @Transactional
     public Map<String, Object> markPendingReportAndSync(Long disclosureId, StatusChangeDTO dto) {
         PatentDisclosure d = requireDisclosure(disclosureId);
+        assertHasDisclosureDoc(disclosureId);
         ApplicationPackage xml = applicationPackageMapper.selectCurrent(disclosureId, PKG_XML);
         ApplicationPackage five = applicationPackageMapper.selectCurrent(disclosureId, PKG_FIVE_BOOKS);
         if (xml == null || five == null) {
@@ -440,6 +484,7 @@ public class DisclosureWorkflowServiceImpl implements DisclosureWorkflowService 
             throw new IllegalArgumentException("disclosureId 不能为空");
         }
         PatentDisclosure d = requireDisclosure(dto.getDisclosureId());
+        assertHasDisclosureDoc(dto.getDisclosureId());
 
         String subject = dto.getSubject();
         String content = dto.getContent();
@@ -562,6 +607,15 @@ public class DisclosureWorkflowServiceImpl implements DisclosureWorkflowService 
     }
 
     // ---------------- private helpers ----------------
+
+    /** 强制：有效交底书（Word）至少一份 */
+    private void assertHasDisclosureDoc(Long disclosureId) {
+        List<DisclosureAttachment> list = disclosureAttachmentMapper.selectByDisclosureId(disclosureId);
+        boolean hasDoc = list.stream().anyMatch(a -> BIZ_DISCLOSURE_DOC.equals(a.getBizType()));
+        if (!hasDoc) {
+            throw new IllegalStateException("该交底尚未上传交底书（Word），请先上传后再操作");
+        }
+    }
 
     private void fillNumbers(PatentDisclosure record, boolean auto) {
         if (auto) {
